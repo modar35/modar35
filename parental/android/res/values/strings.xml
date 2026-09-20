@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Modar Family</string>
+    <string name="accessibility_label">Modar Family — защита</string>
+    <string name="notif_listener_label">Modar Family — уведомления</string>
+    <string name="sos">Тревога SOS</string>
+    <string name="connect">Подключить</string>
+    <string name="save">Сохранить</string>
+    <string name="privacy">Приложение не содержит рекламы и трекеров. Данные идут только на ваш сервер.</string>
+    <string name="accessibility_description">Служба защиты Modar Family: закрывает запрещённые приложения и сайты, считает экранное время и показывает заглушку вместо запрещённого контента. Данные уходят только на сервер вашей семьи.</string>
+</resources>

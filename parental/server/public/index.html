@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<title>Modar Family — родительский контроль</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.png">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">🛡️</span>
+    <span>
+      <b>Modar Family</b>
+      <i id="famLabel">родительский контроль</i>
+    </span>
+  </div>
+  <div class="top-actions">
+    <button id="btnNotify" class="ghost" title="Включить уведомления в этом браузере">🔔 Уведомления</button>
+    <button id="btnRefresh" class="ghost" title="Обновить данные">⟳</button>
+    <button id="btnLogout" class="ghost" hidden>Выйти</button>
+  </div>
+</header>
+
+<!-- ------------------------------------------------------------- вход -->
+<section id="auth" class="auth">
+  <div class="auth-card">
+    <h1>Родительский контроль в интернете</h1>
+    <p class="muted">Панель родителя: геолокация, экранное время, блокировка приложений и сайтов,
+      тревога SOS — с любого устройства, где есть браузер.</p>
+
+    <div class="tabs" id="authTabs">
+      <button class="tab active" data-mode="login">Вход</button>
+      <button class="tab" data-mode="register">Регистрация</button>
+      <button class="tab" data-mode="demo">Демо</button>
+    </div>
+
+    <form id="authForm" autocomplete="on">
+      <label class="field" id="rowName" hidden>
+        <span>Ваше имя</span>
+        <input type="text" id="inName" placeholder="Мария" autocomplete="name">
+      </label>
+      <label class="field" id="rowFamily" hidden>
+        <span>Название семьи</span>
+        <input type="text" id="inFamily" placeholder="Семья Соколовых">
+      </label>
+      <label class="field">
+        <span>E-mail</span>
+        <input type="email" id="inEmail" placeholder="mama@example.com" autocomplete="username" required>
+      </label>
+      <label class="field">
+        <span>Пароль</span>
+        <input type="password" id="inPass" placeholder="не менее 6 символов" autocomplete="current-password" required>
+      </label>
+      <button class="primary" id="btnAuth" type="submit">Войти</button>
+      <p class="hint" id="authHint">Нет аккаунта? Нажмите «Регистрация» — семья создаётся за 5 секунд.</p>
+    </form>
+
+    <div class="demo-box">
+      <b>Как это работает</b>
+      <ol class="muted small">
+        <li>Регистрируетесь здесь — это ваш аккаунт родителя.</li>
+        <li>Ребёнку ставите приложение <b>Modar Family</b> и сопрягаете его кодом из раздела «Устройства».</li>
+        <li>Телефон ребёнка сам выходит на этот сервер через интернет и присылает отчёты — где он, сколько
+            времени в приложениях, что за уведомления пришли.</li>
+        <li>Вы управляете из этой панели: сирена, блокировка экрана, лимиты, сообщение ребёнку.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------- панель -->
+<main id="app" hidden>
+  <div class="layout">
+
+    <!-- левая колонка -->
+    <div class="col col-main">
+      <section class="card">
+        <div class="card-head">
+          <h2>Карта и маршрут</h2>
+          <div class="row-actions">
+            <div class="seg" id="rangeSeg">
+              <button data-hours="1">1 ч</button>
+              <button data-hours="6" class="active">6 ч</button>
+              <button data-hours="24">24 ч</button>
+              <button data-hours="168">7 дней</button>
+            </div>
+            <button class="ghost small" id="btnFit">Показать всё</button>
+          </div>
+        </div>
+        <div class="mapwrap">
+          <canvas id="map" class="map"></canvas>
+          <div class="mapzoom">
+            <button id="zoomIn" title="Приблизить">＋</button>
+            <button id="zoomOut" title="Отдалить">−</button>
+          </div>
+        </div>
+        <div class="map-foot">
+          <span id="mapInfo" class="muted small">Долгое нажатие (или правая кнопка) по карте — добавить геозону</span>
+          <div class="row-actions">
+            <button class="ghost small" id="btnAddPlace">＋ Место (геозона)</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Экранное время сегодня</h2>
+          <span id="usageTotal" class="badge">—</span>
+        </div>
+        <div id="usageChart" class="usage"></div>
+        <div class="muted small">Лимиты дня считаются на телефоне ребёнка по данным системной статистики.</div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Управление</h2>
+          <span class="muted small">команда доходит за секунды, нужен интернет на телефоне ребёнка</span>
+        </div>
+        <div class="actions-grid" id="cmdGrid">
+          <button class="cmd" data-cmd="locate"><b>📍</b><span>Где сейчас</span></button>
+          <button class="cmd" data-cmd="alarm"><b>🚨</b><span>Сирена</span></button>
+          <button class="cmd" data-cmd="lock"><b>🔒</b><span>Блокировать экран</span></button>
+          <button class="cmd" data-cmd="unlock"><b>🔓</b><span>Разблокировать</span></button>
+          <button class="cmd" data-cmd="message"><b>💬</b><span>Сообщение</span></button>
+          <button class="cmd" data-cmd="call"><b>📞</b><span>Позвонить (голосом)</span></button>
+          <button class="cmd" data-cmd="photo"><b>🤳</b><span>Фото с камеры</span></button>
+          <button class="cmd" data-cmd="snapshot"><b>🖼</b><span>Снимок экрана</span></button>
+          <button class="cmd" data-cmd="tour"><b>🧭</b><span>Экскурсия по телефону</span></button>
+          <button class="cmd" data-cmd="torch"><b>🔆</b><span>Фонарик</span></button>
+          <button class="cmd" data-cmd="ring"><b>🔔</b><span>Позвонить на телефон</span></button>
+          <button class="cmd" data-cmd="sync"><b>⤓</b><span>Обновить настройки</span></button>
+        </div>
+      </section>
+    </div>
+
+    <!-- правая колонка -->
+    <div class="col col-side">
+      <section class="card">
+        <div class="card-head">
+          <h2>Дети и устройства</h2>
+          <button class="ghost small" id="btnPair">＋ Подключить телефон</button>
+        </div>
+        <div id="devices" class="devices"></div>
+        <div id="pairBox" class="pairbox" hidden>
+          <div class="muted small">Код сопряжения (действует 24 часа):</div>
+          <div class="paircode" id="pairCode">—</div>
+          <ol class="muted small">
+            <li>Скачайте <a id="apkLink" href="/app/modar-family.apk">приложение Modar Family</a> на телефон ребёнка.</li>
+            <li>В приложении выберите режим «Ребёнок».</li>
+            <li>Введите адрес сервера <code id="serverUrl">—</code> и код выше.</li>
+            <li>Разрешите доступ к геолокации, уведомлениям и «Специальные возможности».</li>
+          </ol>
+          <button class="ghost small" id="btnNewCode">Сгенерировать новый код</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Тревоги и события</h2>
+          <div class="row-actions">
+            <select id="eventFilter" class="mini"></select>
+            <button class="ghost small" id="btnClearAlerts">Сбросить тревогу</button>
+          </div>
+        </div>
+        <div id="events" class="feed"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>Живой экран</h2>
+          <span class="muted small" id="screenState">—</span>
+        </div>
+        <div class="screenwrap">
+          <div class="screenslot" id="screenSlot">
+            <span class="muted small">Команда «Снимок экрана» или «Экскурсия по телефону» — и здесь появится
+              картинка с телефона ребёнка (каждые 2 секунды).</span>
+          </div>
+        </div>
+        <div class="row-actions">
+          <button class="ghost small" id="btnTourStart">Начать экскурсию</button>
+          <button class="ghost small" id="btnTourStop">Стоп</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Уведомления с телефона ребёнка</h2>
+          <span class="muted small">что приходит в мессенджерах и приложениях</span>
+        </div>
+        <div id="notes" class="feed"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Заблокированные сайты</h2>
+          <span class="muted small">веб-фильтр телефона ребёнка</span>
+        </div>
+        <div id="webBlocked" class="feed"></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="layout layout-2">
+    <section class="card">
+      <div class="card-head">
+        <h2>Настройки: лимиты, блокировки, режимы</h2>
+        <select id="settingsDevice" class="mini"></select>
+      </div>
+      <div id="settingsHost"></div>
+      <div class="row-actions right">
+        <button class="ghost" id="btnSettingsReload">Отменить изменения</button>
+        <button class="primary" id="btnSettingsSave">Сохранить на телефон ребёнка</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>Геозоны (места)</h2>
+        <span class="muted small">пришёл в школу / ушёл из дома → уведомление</span>
+      </div>
+      <div id="places" class="feed"></div>
+    </section>
+  </div>
+</main>
+
+<div id="toast" class="toast" hidden></div>
+
+<div id="modal" class="modal" hidden>
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="modalTitle">—</h3>
+      <button class="ghost" id="modalClose">✕</button>
+    </div>
+    <div id="modalBody" class="modal-body"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<div id="callOverlay" class="call" hidden>
+  <div class="call-card">
+    <div class="call-avatar" id="callAvatar">📞</div>
+    <h3 id="callTitle">Звонок ребёнку</h3>
+    <p class="muted" id="callStatus">Подготовка…</p>
+    <div class="row-actions center">
+      <button class="danger" id="callHangup">Завершить</button>
+    </div>
+  </div>
+</div>
+
+<script src="/map.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
