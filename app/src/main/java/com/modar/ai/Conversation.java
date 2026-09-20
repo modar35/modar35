@@ -31,9 +31,18 @@ public class Conversation {
         return "Пустой диалог";
     }
 
+    /** Является ли название «заглушкой» (тогда его можно заменить первым вопросом). */
+    public boolean isPlaceholderTitle() {
+        if (title == null) {
+            return true;
+        }
+        String t = title.trim();
+        return t.isEmpty() || "Новый диалог".equals(t) || "Новый чат".equals(t) || "Без названия".equals(t);
+    }
+
     /** Заголовок из первого вопроса пользователя. */
     public void autoTitle() {
-        if (title != null && !title.trim().isEmpty()) {
+        if (!isPlaceholderTitle()) {
             return;
         }
         for (int i = 0; i < messages.size(); i++) {
