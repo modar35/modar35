@@ -72,6 +72,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         prefs = new Prefs(this);
+        prefs.seedFromAssetsIfEmpty();
         store = new Store(this);
         conv = store.current();
         client = new OpenAiClient();

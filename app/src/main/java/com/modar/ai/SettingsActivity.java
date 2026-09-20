@@ -52,6 +52,7 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         prefs = new Prefs(this);
+        prefs.seedFromAssetsIfEmpty();
 
         keyField = (EditText) findViewById(R.id.set_key);
         urlField = (EditText) findViewById(R.id.set_url);
@@ -99,6 +100,27 @@ public class SettingsActivity extends Activity {
             }
         });
 
+        findViewById(R.id.set_paste).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pasteFromClipboard();
+            }
+        });
+
+        findViewById(R.id.set_toggle_key).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleKeyVisibility();
+            }
+        });
+
+        findViewById(R.id.set_help).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showKeyHelp();
+            }
+        });
+
         findViewById(R.id.set_test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +152,58 @@ public class SettingsActivity extends Activity {
 
     private void updateTempLabel(int progress) {
         tempLabel.setText(String.format(java.util.Locale.US, "%.1f", progress / 10f));
+    }
+
+    /** Вставка ключа из буфера обмена — чтобы не набирать вручную. */
+    private void pasteFromClipboard() {
+        try {
+            android.content.ClipboardManager cm =
+                    (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            if (cm == null || !cm.hasPrimaryClip() || cm.getPrimaryClip() == null
+                    || cm.getPrimaryClip().getItemCount() == 0) {
+                toast("Буфер обмена пуст");
+                return;
+            }
+            CharSequence text = cm.getPrimaryClip().getItemAt(0).coerceToText(this);
+            if (text == null || text.toString().trim().isEmpty()) {
+                toast("Буфер обмена пуст");
+                return;
+            }
+            String value = text.toString().trim().replace("\n", "").replace("\r", "");
+            keyField.setText(value);
+            keyField.setSelection(keyField.getText().length());
+            toast(value.length() > 12
+                    ? "Ключ вставлен: " + value.substring(0, 6) + "…" + value.substring(value.length() - 4)
+                    : "Ключ вставлен");
+        } catch (Throwable t) {
+            toast("Не удалось вставить: " + t.getMessage());
+        }
+    }
+
+    private void toggleKeyVisibility() {
+        boolean hidden = (keyField.getInputType()
+                & android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD) != 0;
+        if (hidden) {
+            keyField.setInputType(android.text.InputType.TYPE_CLASS_TEXT
+                    | android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        } else {
+            keyField.setInputType(android.text.InputType.TYPE_CLASS_TEXT
+                    | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
+        keyField.setSelection(keyField.getText().length());
+        ((android.widget.Button) findViewById(R.id.set_toggle_key)).setText(hidden ? "Скрыть" : "Показать");
+    }
+
+    /** Подсказка: где взять ключ и как обойтись без него. */
+    private void showKeyHelp() {
+        showResult("Где взять ключ API",
+                "1. Ключ создаётся в личном кабинете вашего ИИ-сервиса, например на platform.openai.com → "
+                + "API keys → Create new secret key. Ключ показывается один раз — сразу скопируйте его.\n\n"
+                + "2. Скопированный ключ вставьте сюда кнопкой «Вставить».\n\n"
+                + "3. Можно работать вообще без ключа, если модель запущена на вашем компьютере "
+                + "(Ollama, LM Studio, llama.cpp): укажите в «Адрес сервера» адрес вида "
+                + "http://192.168.1.50:11434/v1 — поле ключа оставьте пустым.\n\n"
+                + "Ключ хранится только на этом устройстве и никуда, кроме указанного сервера, не отправляется.");
     }
 
     private void save() {

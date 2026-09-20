@@ -3,6 +3,10 @@ package com.modar.ai;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.Locale;
+
 /** Локальные настройки приложения (ключ API, модель, голос и т.д.). */
 public class Prefs {
 
@@ -15,9 +19,11 @@ public class Prefs {
     private static final String FILE = "modar_settings";
 
     private final SharedPreferences sp;
+    private final Context ctx;
 
     public Prefs(Context ctx) {
-        this.sp = ctx.getApplicationContext().getSharedPreferences(FILE, Context.MODE_PRIVATE);
+        this.ctx = ctx.getApplicationContext();
+        this.sp = this.ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE);
     }
 
     private String get(String key, String def) {
@@ -106,6 +112,105 @@ public class Prefs {
     }
 
     public boolean isConfigured() {
-        return !apiKey().isEmpty();
+        return !apiKey().isEmpty() || isLocalServer();
+    }
+
+    /** Локальный сервер (Ollama, LM Studio, llama.cpp) — ключ обычно не нужен. */
+    public boolean isLocalServer() {
+        String host = host();
+        if (host.isEmpty()) {
+            return false;
+        }
+        if ("localhost".equals(host) || "127.0.0.1".equals(host) || "::1".equals(host)
+                || host.startsWith("127.") || host.endsWith(".local") || host.startsWith("fe80::")) {
+            return true;
+        }
+        if (host.startsWith("192.168.") || host.startsWith("10.")) {
+            return true;
+        }
+        if (host.startsWith("172.")) {
+            String[] parts = host.split("\\.");
+            if (parts.length > 1) {
+                try {
+                    int second = Integer.parseInt(parts[1]);
+                    return second >= 16 && second <= 31;
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
+        return false;
+    }
+
+    /** Имя хоста из Base URL (без схемы, порта и пути). */
+    public String host() {
+        String url = baseUrl();
+        int scheme = url.indexOf("://");
+        String rest = scheme >= 0 ? url.substring(scheme + 3) : url;
+        int slash = rest.indexOf('/');
+        if (slash >= 0) {
+            rest = rest.substring(0, slash);
+        }
+        int at = rest.indexOf('@');
+        if (at >= 0) {
+            rest = rest.substring(at + 1);
+        }
+        if (rest.startsWith("[")) { // IPv6 в квадратных скобках
+            int end = rest.indexOf(']');
+            return end > 0 ? rest.substring(0, end + 1).toLowerCase(Locale.ROOT) : rest.toLowerCase(Locale.ROOT);
+        }
+        int colon = rest.indexOf(':');
+        if (colon >= 0) {
+            rest = rest.substring(0, colon);
+        }
+        return rest.toLowerCase(Locale.ROOT);
+    }
+
+    /**
+     * Предзаполнение настроек из assets (используется при сборке с параметрами
+     * API_KEY / BASE_URL / MODEL — см. tools/build-apk.sh). Уже введённые
+     * пользователем значения не перезаписываются.
+     */
+    public void seedFromAssetsIfEmpty() {
+        if (apiKey().isEmpty()) {
+            String key = readAsset("api_key.txt");
+            if (key != null && !key.isEmpty()) {
+                setApiKey(key);
+            }
+        }
+        if (!sp.contains("base_url")) {
+            String url = readAsset("base_url.txt");
+            if (url != null && !url.isEmpty()) {
+                setBaseUrl(url);
+            }
+        }
+        if (!sp.contains("model")) {
+            String model = readAsset("model.txt");
+            if (model != null && !model.isEmpty()) {
+                setModel(model);
+            }
+        }
+    }
+
+    private String readAsset(String name) {
+        InputStream in = null;
+        try {
+            in = ctx.getAssets().open(name);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buf = new byte[4096];
+            int n;
+            while ((n = in.read(buf)) > 0) {
+                bos.write(buf, 0, n);
+            }
+            return new String(bos.toByteArray(), "UTF-8").trim();
+        } catch (Throwable t) {
+            return null;
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (Throwable ignored) {
+                }
+            }
+        }
     }
 }

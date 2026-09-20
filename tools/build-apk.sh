@@ -11,6 +11,12 @@
 #   tools/build-apk.sh            # debug-подпись, ключ из отладочного keystore
 #   RELEASE=1 tools/build-apk.sh  # подпись своим ключом (KEYSTORE/PASS/ALIAS)
 #
+# Необязательное предзаполнение настроек при сборке (приложение подставит их
+# при первом запуске, пока пользователь не изменил значения вручную):
+#   API_KEY=sk-... tools/build-apk.sh     # вшить ключ (не публиковать такой APK!)
+#   BASE_URL=http://192.168.1.50:11434/v1 tools/build-apk.sh
+#   MODEL=qwen2.5 tools/build-apk.sh
+#
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -52,6 +58,22 @@ sed "s|<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\">|<
 grep -q "package=\"$PKG\"" "$BUILD/manifest/AndroidManifest.xml" || {
   echo "Не удалось подставить package в манифест" >&2; exit 1; }
 
+echo "==> 1b/6 Предзаполнение настроек (необязательно)"
+ASSETS_DIR="$BUILD/assets"
+mkdir -p "$ASSETS_DIR"
+if [ -n "${API_KEY:-}" ]; then
+  printf '%s' "$API_KEY" > "$ASSETS_DIR/api_key.txt"
+  echo "    ! API_KEY вшит в APK — такой файл нельзя публиковать: ключ извлекается из сборки."
+fi
+if [ -n "${BASE_URL:-}" ]; then
+  printf '%s' "$BASE_URL" > "$ASSETS_DIR/base_url.txt"
+  echo "    base_url: $BASE_URL"
+fi
+if [ -n "${MODEL:-}" ]; then
+  printf '%s' "$MODEL" > "$ASSETS_DIR/model.txt"
+  echo "    model: $MODEL"
+fi
+
 echo "==> 2/6 aapt2 compile (ресурсы)"
 find "$RES_DIR" -type f | sort > "$BUILD/res-files.txt"
 "$AAPT2" compile --dir "$RES_DIR" -o "$BUILD/res.zip"
@@ -67,6 +89,7 @@ echo "==> 3/6 aapt2 link (ресурсы + R.java)"
   --version-code "$VERSION_CODE" \
   --version-name "$VERSION_NAME" \
   --auto-add-overlay \
+  -A "$ASSETS_DIR" \
   "$BUILD/res.zip"
 
 echo "==> 4/6 ecj (компиляция Java)"
@@ -122,10 +145,12 @@ APK="$OUT/${APP_NAME}-${VERSION_NAME}-${SUFFIX}.apk"
 
 echo
 echo "==> Проверка подписи"
-"$JAVA" -jar "$APKSIGNER_JAR" verify --print-certs "$APK" | head -6
+"$JAVA" -jar "$APKSIGNER_JAR" verify --print-certs "$APK" > "$BUILD/verify.txt" 2>&1 || true
+head -6 "$BUILD/verify.txt"
 echo
 echo "==> Содержимое манифеста"
-"$AAPT2" dump badging "$APK" | head -12
+"$AAPT2" dump badging "$APK" > "$BUILD/badging.txt" 2>&1 || true
+head -12 "$BUILD/badging.txt"
 echo
 ls -lh "$APK"
 echo "Готово: $APK"

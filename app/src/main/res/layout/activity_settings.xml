@@ -85,6 +85,49 @@
                 android:layout_height="wrap_content"
                 android:hint="sk-…" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/set_paste"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_secondary"
+                    android:text="Вставить из буфера"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/set_toggle_key"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/btn_secondary"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:text="Показать"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/set_help"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/btn_secondary"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:text="Где взять?"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
             <TextView style="@style/FieldLabel" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:text="Модель" />
 

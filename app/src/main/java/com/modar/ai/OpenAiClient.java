@@ -135,7 +135,9 @@ public class OpenAiClient {
             conn.setReadTimeout(180000);
             conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
             conn.setRequestProperty("Accept", req.stream ? "text/event-stream" : "application/json");
-            conn.setRequestProperty("Authorization", "Bearer " + req.apiKey);
+            if (req.apiKey != null && !req.apiKey.trim().isEmpty()) {
+                conn.setRequestProperty("Authorization", "Bearer " + req.apiKey.trim());
+            }
             conn.setRequestProperty("User-Agent", "ModarAI-Android/1.0");
             byte[] payload = body.toString().getBytes("UTF-8");
             conn.setFixedLengthStreamingMode(payload.length);
@@ -540,7 +542,9 @@ public class OpenAiClient {
                     conn.setRequestMethod("GET");
                     conn.setConnectTimeout(20000);
                     conn.setReadTimeout(60000);
-                    conn.setRequestProperty("Authorization", "Bearer " + apiKey);
+                    if (apiKey != null && !apiKey.trim().isEmpty()) {
+                        conn.setRequestProperty("Authorization", "Bearer " + apiKey.trim());
+                    }
                     conn.setRequestProperty("Accept", "application/json");
                     int code = conn.getResponseCode();
                     if (code < 200 || code >= 300) {
