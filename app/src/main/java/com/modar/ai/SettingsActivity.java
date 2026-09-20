@@ -21,16 +21,26 @@ public class SettingsActivity extends Activity {
 
     private static final String[] PRESET_MODELS = new String[]{
             "gpt-6-astra",
+            "gpt-6-astra-pro",
+            "gpt-5.5",
+            "claude-fable-5.1",
+            "gemini-3-8-flash",
+            "deepseek-v4-1-flash",
             "gpt-5.6",
-            "gpt-5.6-sol",
-            "gpt-5.6-terra",
-            "gpt-5.6-luna",
-            "gpt-5",
             "gpt-4o",
             "o3",
-            "anthropic/claude-sonnet-4.5",
-            "google/gemini-2.5-pro",
             "meta-llama/llama-3.3-70b-instruct"
+    };
+
+    /** Популярные серверы: подпись → Base URL. */
+    private static final String[][] PRESET_URLS = new String[][]{
+            {"OpenAI (api.openai.com)", "https://api.openai.com/v1"},
+            {"GenAPI, Россия (proxy.gen-api.ru)", "https://proxy.gen-api.ru/v1"},
+            {"ProxyAPI, Россия (api.proxyapi.ru)", "https://api.proxyapi.ru/openai/v1"},
+            {"RouterAI, Россия (routerai.ru)", "https://routerai.ru/v1"},
+            {"OpenRouter (openrouter.ai)", "https://openrouter.ai/api/v1"},
+            {"Ollama на моём компьютере", "http://192.168.1.50:11434/v1"},
+            {"LM Studio на моём компьютере", "http://192.168.1.50:1234/v1"}
     };
 
     private Prefs prefs;
@@ -97,6 +107,13 @@ public class SettingsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 showModelChooser();
+            }
+        });
+
+        findViewById(R.id.set_url_choose).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showUrlChooser();
             }
         });
 
@@ -248,6 +265,33 @@ public class SettingsActivity extends Activity {
                 .show();
     }
 
+    /** Выбор популярного сервера — избавляет от ручного ввода адреса. */
+    private void showUrlChooser() {
+        final String[] labels = new String[PRESET_URLS.length];
+        for (int i = 0; i < PRESET_URLS.length; i++) {
+            labels[i] = PRESET_URLS[i][0];
+        }
+        new AlertDialog.Builder(this)
+                .setTitle("Адрес сервера")
+                .setItems(labels, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        urlField.setText(PRESET_URLS[which][1]);
+                        urlField.setSelection(urlField.getText().length());
+                        if (PRESET_URLS[which][1].contains("192.168.1.50")) {
+                            showResult("Замените IP",
+                                    "В адресе " + PRESET_URLS[which][1] + "\n\n"
+                                    + "замените 192.168.1.50 на IP-адрес вашего компьютера в домашней сети "
+                                    + "(телефон и компьютер должны быть в одной сети Wi-Fi). "
+                                    + "Ключ API при этом можно оставить пустым.");
+                        } else {
+                            toast("Адрес сервера: " + PRESET_URLS[which][1]);
+                        }
+                    }
+                })
+                .show();
+    }
+
     private void loadModelsFromServer() {
         final ProgressDialog progress = new ProgressDialog(this);
         progress.setMessage("Запрашиваю список моделей…");
@@ -259,7 +303,11 @@ public class SettingsActivity extends Activity {
                     public void onModels(List<String> models, String error) {
                         dismiss(progress);
                         if (error != null) {
-                            showResult("Не удалось получить список", error);
+                            showResult("Список моделей недоступен",
+                                    error + "\n\nНекоторые сервисы (например, агрегаторы вроде GenAPI) "
+                                            + "не отдают /models — это нормально. Введите идентификатор модели "
+                                            + "вручную, например gpt-6-astra, или нажмите «Выбрать» и возьмите "
+                                            + "значение из готового списка.");
                             return;
                         }
                         if (models == null || models.isEmpty()) {
@@ -280,25 +328,57 @@ public class SettingsActivity extends Activity {
                 });
     }
 
+    /**
+     * Проверка соединения настоящим запросом к модели: он проверяет сразу
+     * ключ, адрес и название модели (список /models поддерживают не все сервисы).
+     */
     private void testConnection() {
+        final String model = modelField.getText().toString().trim();
+        if (model.isEmpty()) {
+            showResult("Укажите модель", "Сначала выберите модель — например, gpt-6-astra.");
+            return;
+        }
         final ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Проверяю соединение…");
+        progress.setMessage("Отправляю тестовый запрос…");
         progress.setCancelable(false);
         progress.show();
-        client.listModels(urlField.getText().toString().trim(), keyField.getText().toString().trim(),
-                new OpenAiClient.ModelsCallback() {
-                    @Override
-                    public void onModels(List<String> models, String error) {
-                        dismiss(progress);
-                        if (error != null) {
-                            showResult("Ошибка соединения", error);
-                        } else {
-                            showResult("Соединение работает",
-                                    "Сервер ответил. Доступно моделей: " + (models == null ? 0 : models.size())
-                                            + ".\nВыбранная модель: " + modelField.getText().toString().trim());
-                        }
-                    }
-                });
+
+        OpenAiClient.Request req = new OpenAiClient.Request();
+        req.baseUrl = urlField.getText().toString().trim();
+        req.apiKey = keyField.getText().toString().trim();
+        req.model = model;
+        req.systemPrompt = null;
+        req.temperature = 0.2f;
+        req.maxTokens = 32;
+        req.stream = false;
+        List<Message> msgs = new ArrayList<Message>();
+        msgs.add(new Message(Message.ROLE_USER, "Ответь одним коротким словом: работает?"));
+        req.messages = msgs;
+
+        client.send(req, new OpenAiClient.Callback() {
+            @Override
+            public void onDelta(String text) {
+            }
+
+            @Override
+            public void onDone(String full) {
+                dismiss(progress);
+                String answer = full == null ? "" : full.trim();
+                if (answer.length() > 300) {
+                    answer = answer.substring(0, 300) + "…";
+                }
+                showResult("Соединение работает ✅",
+                        "Сервер: " + urlField.getText().toString().trim()
+                                + "\nМодель: " + model
+                                + "\n\nОтвет модели: " + (answer.isEmpty() ? "(пустой ответ)" : answer));
+            }
+
+            @Override
+            public void onError(String message) {
+                dismiss(progress);
+                showResult("Ошибка соединения", message);
+            }
+        });
     }
 
     private void dismiss(ProgressDialog p) {

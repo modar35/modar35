@@ -67,13 +67,33 @@
             <TextView style="@style/FieldLabel" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:text="Адрес сервера (Base URL)" />
 
-            <EditText
-                android:id="@+id/set_url"
-                style="@style/Field"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textUri"
-                android:text="https://api.openai.com/v1" />
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/set_url"
+                    style="@style/Field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="textUri"
+                    android:text="https://api.openai.com/v1" />
+
+                <Button
+                    android:id="@+id/set_url_choose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/btn_secondary"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:text="Выбрать"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <TextView style="@style/FieldLabel" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:text="API-ключ" />
