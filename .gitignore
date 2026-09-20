@@ -24,3 +24,11 @@ dist/
 
 # Готовый APK в репозитории (исключение из *.apk)
 !apk/*.apk
+
+# Modar Family (родительский контроль)
+parental/server/data/
+parental/server/node_modules/
+parental/tools/cache/
+
+# Готовый APK Modar Family (исключение из *.apk)
+!parental/apk/*.apk

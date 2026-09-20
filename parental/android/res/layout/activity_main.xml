@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🛡️ Modar Family"
+            android:textColor="@color/text"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/setupTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Родительский контроль через интернет"
+            android:textColor="@color/text_muted"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/setupStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/card_bg"
+            android:padding="12dp"
+            android:text="Введите адрес сервера семьи — он выдаётся тому, кто развернул сервер (например http://192.168.1.50:8080)."
+            android:textColor="@color/text"
+            android:textSize="14sp" />
+
+        <TextView style="@style/SectionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Шаг 1. Сервер семьи" />
+
+        <EditText
+            android:id="@+id/serverField"
+            style="@style/Field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="http://адрес-сервера:8080"
+            android:inputType="textUri" />
+
+        <Button
+            android:id="@+id/checkServer"
+            style="@style/SecondaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Проверить связь с сервером" />
+
+        <TextView style="@style/SectionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Шаг 2. Кто это устройство" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/tabParent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="👨‍👩‍👧 Родитель"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/tabChild"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="🧒 Ребёнок"
+                android:textAllCaps="false" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/setupHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/text_muted"
+            android:textSize="13sp" />
+
+        <!-- Родитель -->
+        <LinearLayout
+            android:id="@+id/parentBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/nameField"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ваше имя (для регистрации)" />
+
+            <EditText
+                android:id="@+id/emailField"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="E-mail"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/passwordField"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Пароль (не короче 6 символов)"
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/loginButton"
+                style="@style/PrimaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Войти в семью" />
+
+            <Button
+                android:id="@+id/registerButton"
+                style="@style/SecondaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Создать новую семью" />
+        </LinearLayout>
+
+        <!-- Ребёнок -->
+        <LinearLayout
+            android:id="@+id/childBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/codeField"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Код из 6 цифр от родителя"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/childNameField"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Имя ребёнка (например Алиса)" />
+
+            <Button
+                android:id="@+id/connectButton"
+                style="@style/PrimaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Подключить телефон" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/enterButton"
+            style="@style/PrimaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Открыть приложение"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="Как это работает\n\n1. Кто-то из семьи разворачивает сервер (см. parental/docs/DEPLOY.md) — он хранит данные семьи.\n\n2. Вы создаёте аккаунт родителя здесь или в веб-панели сервера.\n\n3. В приложении на телефоне ребёнка выбираете «Ребёнок» и вводите код.\n\n4. Телефон ребёнка отправляет отчёты через интернет, а вы смотрите карту, экранное время и управляете телефоном из любого места."
+            android:textColor="@color/text_muted"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/privacy"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp" />
+    </LinearLayout>
+</ScrollView>

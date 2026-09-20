@@ -1,0 +1,15 @@
+{
+  "name": "Modar Family — родительский контроль",
+  "short_name": "Modar Family",
+  "description": "Панель родителя: геолокация, экранное время, блокировки и тревоги.",
+  "lang": "ru",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b1020",
+  "theme_color": "#0b1020",
+  "icons": [
+    { "src": "/icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
