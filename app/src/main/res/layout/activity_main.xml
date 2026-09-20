@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical">
+
+    <!-- Шапка -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface"
+        android:elevation="4dp"
+        android:orientation="horizontal"
+        android:paddingLeft="4dp"
+        android:paddingTop="6dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="6dp">
+
+        <ImageButton
+            android:id="@+id/btn_chats"
+            style="@style/IconButton"
+            android:contentDescription="@string/chats_title"
+            android:src="@drawable/ic_chats" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp">
+
+            <TextView
+                android:id="@+id/header_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:text="@string/app_name"
+                android:textColor="@color/text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/header_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/text_muted"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_new"
+            style="@style/IconButton"
+            android:contentDescription="@string/welcome_title"
+            android:src="@drawable/ic_add" />
+
+        <ImageButton
+            android:id="@+id/btn_settings"
+            style="@style/IconButton"
+            android:contentDescription="@string/settings_title"
+            android:src="@drawable/ic_settings" />
+    </LinearLayout>
+
+    <!-- Лента сообщений -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/messages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:listSelector="@android:color/transparent"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:scrollbarStyle="outsideOverlay" />
+
+        <LinearLayout
+            android:id="@+id/welcome"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="28dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/welcome_title"
+                android:textColor="@color/text"
+                android:textSize="24sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="@string/welcome_sub"
+                android:textColor="@color/text_muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/chip1"
+                style="@style/Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/chip2"
+                style="@style/Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/chip3"
+                style="@style/Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/chip4"
+                style="@style/Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Прикреплённое изображение -->
+    <LinearLayout
+        android:id="@+id/attach_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingTop="6dp"
+        android:paddingRight="6dp"
+        android:paddingBottom="2dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/attach_thumb"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/card_bg"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/attach_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:text="@string/attach_ready"
+            android:textColor="@color/text_muted"
+            android:textSize="13sp" />
+
+        <ImageButton
+            android:id="@+id/attach_remove"
+            style="@style/IconButton"
+            android:contentDescription="@string/attach_ready"
+            android:src="@drawable/ic_close" />
+    </LinearLayout>
+
+    <!-- Строка ввода -->
+    <LinearLayout
+        android:id="@+id/input_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="4dp"
+        android:paddingTop="6dp"
+        android:paddingRight="6dp"
+        android:paddingBottom="6dp">
+
+        <ImageButton
+            android:id="@+id/btn_attach"
+            style="@style/IconButton"
+            android:contentDescription="@string/attach_ready"
+            android:src="@drawable/ic_image" />
+
+        <EditText
+            android:id="@+id/input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/input_bg"
+            android:hint="@string/input_hint"
+            android:imeOptions="actionSend|flagNoEnterAction"
+            android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+            android:maxLines="6"
+            android:minHeight="44dp"
+            android:paddingLeft="14dp"
+            android:paddingTop="10dp"
+            android:paddingRight="14dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/text"
+            android:textColorHint="@color/text_muted"
+            android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/btn_mic"
+            style="@style/IconButton"
+            android:background="@drawable/btn_circle"
+            android:contentDescription="@string/welcome_sub"
+            android:src="@drawable/ic_mic" />
+
+        <ImageButton
+            android:id="@+id/btn_send"
+            style="@style/IconButton"
+            android:background="@drawable/btn_round"
+            android:contentDescription="@string/send"
+            android:src="@drawable/ic_send" />
+    </LinearLayout>
+</LinearLayout>

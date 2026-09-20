@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="4dp"
+        android:paddingTop="6dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="6dp">
+
+        <ImageButton
+            android:id="@+id/set_back"
+            style="@style/IconButton"
+            android:contentDescription="@string/settings_title"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:paddingLeft="8dp"
+            android:text="@string/settings_title"
+            android:textColor="@color/text"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/set_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_primary"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:text="@string/save"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbarStyle="outsideOverlay">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingTop="4dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="28dp">
+
+            <TextView style="@style/SectionTitle" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="Подключение" />
+
+            <TextView style="@style/FieldLabel" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="Адрес сервера (Base URL)" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/set_url"
+                    style="@style/Field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="textUri"
+                    android:text="https://api.openai.com/v1" />
+
+                <Button
+                    android:id="@+id/set_url_choose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/btn_secondary"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:text="Выбрать"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <TextView style="@style/FieldLabel" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="API-ключ" />
+
+            <EditText
+                android:id="@+id/set_key"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="sk-…" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/set_paste"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_secondary"
+                    android:text="Вставить из буфера"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/set_toggle_key"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/btn_secondary"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:text="Показать"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/set_help"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/btn_secondary"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:text="Где взять?"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <TextView style="@style/FieldLabel" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="Модель" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/set_model"
+                    style="@style/Field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/set_models"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/btn_secondary"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:text="Выбрать"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/set_test"
+                style="@style/SecondaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Проверить соединение" />
+
+            <TextView style="@style/SectionTitle" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="Поведение" />
+
+            <TextView style="@style/FieldLabel" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="Системный промпт (характер ассистента)" />
+
+            <EditText
+                android:id="@+id/set_system"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="4" />
+
+            <TextView style="@style/FieldLabel" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="Температура (креативность)" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <SeekBar
+                    android:id="@+id/set_temp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/set_temp_label"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:textColor="@color/text"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <TextView style="@style/FieldLabel" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="Максимум токенов ответа (0 — без ограничения)" />
+
+            <EditText
+                android:id="@+id/set_tokens"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+
+            <Switch
+                android:id="@+id/set_stream"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Потоковый ответ (печать по словам)"
+                android:textColor="@color/text"
+                android:textSize="15sp" />
+
+            <TextView style="@style/SectionTitle" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="Голос" />
+
+            <Switch
+                android:id="@+id/set_tts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Озвучивать ответы ассистента"
+                android:textColor="@color/text"
+                android:textSize="15sp" />
+
+            <TextView style="@style/FieldLabel" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="Язык распознавания и озвучивания (ru-RU, en-US, …)" />
+
+            <EditText
+                android:id="@+id/set_locale"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="@string/privacy_note"
+                android:textColor="@color/text_muted"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/set_save2"
+                style="@style/PrimaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
