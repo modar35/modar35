@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modar AI — предпросмотр интерфейса</title>
+<style>
+  :root{
+    --bg:#0E1116; --surface:#151A21; --surface-alt:#1E2530; --bubble-ai:#1B2230;
+    --bubble-user:#2E6BE6; --accent:#4C8DFF; --text:#E9EDF5; --muted:#93A1B5;
+    --danger:#FF7A7A; --code:#0B1119; --divider:#232B38;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:32px 20px 60px;background:#070A0E;color:var(--text);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+  h1{text-align:center;font-size:22px;font-weight:600;margin:0 0 6px}
+  .sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:34px}
+  .row{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;align-items:flex-start}
+  .phone{width:330px;background:var(--bg);border-radius:26px;border:1px solid var(--divider);
+         box-shadow:0 18px 50px rgba(0,0,0,.55);overflow:hidden;display:flex;flex-direction:column;height:660px}
+  .caption{text-align:center;color:var(--muted);font-size:12.5px;margin-top:10px}
+  .header{display:flex;align-items:center;gap:4px;background:var(--surface);padding:8px 6px;
+          box-shadow:0 2px 10px rgba(0,0,0,.35);z-index:2}
+  .iconbtn{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;flex:0 0 auto}
+  .iconbtn svg{width:20px;height:20px;display:block}
+  .title{font-size:15px;font-weight:600;line-height:1.2}
+  .subtitle{font-size:10.5px;color:var(--muted)}
+  .grow{flex:1;min-width:0}
+  .body{flex:1;overflow:auto;padding:10px 0}
+  .rowmsg{display:flex;padding:5px 12px}
+  .rowmsg.user{justify-content:flex-end}
+  .bubble{max-width:86%;padding:10px 14px 8px;font-size:14px;line-height:1.45;white-space:pre-wrap}
+  .bubble.ai{background:var(--bubble-ai);border:1px solid var(--divider);
+             border-radius:18px 18px 18px 6px}
+  .bubble.user{background:var(--bubble-user);border-radius:18px 18px 6px 18px}
+  .meta{font-size:9.5px;color:var(--muted);text-align:right;margin-top:4px}
+  .bubble.user .meta{color:rgba(255,255,255,.75)}
+  .code{display:block;background:var(--code);border-radius:8px;padding:8px 10px;margin:6px 0;
+        font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;color:#cfe3ff}
+  .b{font-weight:700}
+  .list{color:var(--muted)}
+  .welcome{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+           gap:8px;padding:26px;text-align:center}
+  .welcome h2{font-size:22px;margin:0}
+  .welcome p{color:var(--muted);font-size:13px;margin:4px 0 12px}
+  .chip{background:var(--surface-alt);border:1px solid var(--divider);border-radius:20px;
+        padding:9px 16px;font-size:13px;color:var(--text)}
+  .inputbar{display:flex;align-items:center;gap:2px;background:var(--surface);padding:8px 6px;
+            border-top:1px solid var(--divider)}
+  .field{flex:1;background:var(--surface-alt);border:1px solid var(--divider);border-radius:22px;
+         padding:11px 14px;color:var(--muted);font-size:13.5px}
+  .circle{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto}
+  .circle.mic{background:var(--surface-alt)}
+  .circle.send{background:var(--accent)}
+  .circle.send svg{fill:#fff}
+  .conv{padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--divider)}
+  .conv.sel{background:#182031}
+  .conv .t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .conv .p{font-size:12.5px;color:var(--muted);margin-top:3px;display:-webkit-box;
+           -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .conv .m{font-size:10.5px;color:var(--muted);margin-top:5px}
+  .section{color:var(--accent);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+           padding:16px 0 6px}
+  .label{color:var(--muted);font-size:12.5px;padding:8px 0 5px}
+  .setfield{background:var(--surface-alt);border:1px solid var(--divider);border-radius:22px;
+            padding:11px 14px;font-size:13.5px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .btnrow{display:flex;gap:8px}
+  .btn{background:var(--surface-alt);border:1px solid var(--divider);border-radius:14px;
+       padding:11px;text-align:center;font-size:13.5px;color:var(--text);flex:1}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .switchrow{display:flex;align-items:center;justify-content:space-between;padding:10px 0;font-size:13.5px}
+  .switch{width:42px;height:24px;border-radius:12px;background:var(--surface-alt);
+          border:1px solid var(--divider);position:relative;flex:0 0 auto}
+  .switch.on{background:var(--accent);border-color:var(--accent)}
+  .switch i{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}
+  .switch.on i{left:20px}
+  .note{color:var(--muted);font-size:11px;padding-top:16px;line-height:1.5}
+  .statusbar{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);
+             padding:6px 14px 2px;background:var(--surface)}
+  .chip-wrap{display:flex;flex-direction:column;gap:8px;align-items:center}
+</style>
+</head>
+<body>
+<h1>Modar AI — ИИ-ассистент для Android</h1>
+<div class="sub">Предпросмотр интерфейса (повторяет макеты приложения 1:1). Реальное приложение — в APK.</div>
+
+<div class="row">
+
+  <!-- ЭКРАН 1: чат -->
+  <div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span>LTE ▪ 86%</span></div>
+      <div class="header">
+        <div class="iconbtn"><svg viewBox="0 0 24 24" fill="#93A1B5"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>
+        <div class="grow">
+          <div class="title">Как настроить VPN на роутере?</div>
+          <div class="subtitle">gpt-6-astra · api.openai.com</div>
+        </div>
+        <div class="iconbtn"><svg viewBox="0 0 24 24" fill="#93A1B5"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+        <div class="iconbtn"><svg viewBox="0 0 24 24" fill="#93A1B5"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm8.4 4c0-.5-.05-1-.14-1.5l2.05-1.6-2-3.46-2.4.97a7.6 7.6 0 0 0-2.6-1.5L14.9 2h-4l-.4 2.9a7.6 7.6 0 0 0-2.6 1.5l-2.4-.97-2 3.46 2.05 1.6a8 8 0 0 0 0 3l-2.05 1.6 2 3.46 2.4-.97a7.6 7.6 0 0 0 2.6 1.5l.4 2.9h4l.4-2.9a7.6 7.6 0 0 0 2.6-1.5l2.4.97 2-3.46-2.05-1.6c.09-.5.14-1 .14-1.5z"/></svg></div>
+      </div>
+
+      <div class="body">
+        <div class="rowmsg user">
+          <div class="bubble user">Объясни простыми словами, как работает нейросеть<div class="meta">9:38</div></div>
+        </div>
+        <div class="rowmsg">
+          <div class="bubble ai"><span class="b">Нейросеть — это «угадыватель».</span>
+Представьте, что вы много раз видели, как выглядит кошка 🐱. Со временем мозг замечает закономерности: уши, усы, хвост.
+
+Нейросеть учится так же — на тысячах примеров:
+<span class="list">•  покажите 10 000 фото кошек;</span>
+<span class="list">•  она подстраивает миллионы чисел-«весов»;</span>
+<span class="list">•  потом узнаёт кошку на новой картинке.</span>
+
+Внутри — слои «нейронов», и каждый слой замечает всё более сложные детали:
+<span class="code">пиксели → линии → лапы → морда → кошка</span>
+Сама по себе она не думает: просто предсказывает наиболее вероятный ответ.<div class="meta">9:38 · gpt-6-astra</div></div>
+        </div>
+        <div class="rowmsg user">
+          <div class="bubble user">А сколько нужно данных?<div class="meta">9:40</div></div>
+        </div>
+        <div class="rowmsg">
+          <div class="bubble ai">Зависит от задачи. Для простого распознавания — от нескольких тысяч примеров, для больших языковых моделей — триллионы слов. <em>Практическое правило:</em> чем сложнее задача, тем больше данных нужно, но полезнее «чистые» и разнообразные примеры, чем просто много.<div class="meta">9:40 · печатает…</div></div>
+        </div>
+      </div>
+
+      <div class="inputbar">
+        <div class="iconbtn"><svg viewBox="0 0 24 24" fill="#93A1B5"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div>
+        <div class="field">Сообщение…</div>
+        <div class="circle mic"><svg viewBox="0 0 24 24" fill="#93A1B5"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5.3-3a5.3 5.3 0 0 1-10.6 0H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28A6.99 6.99 0 0 0 19 11h-1.7z"/></svg></div>
+        <div class="circle send"><svg viewBox="0 0 24 24" fill="#fff"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></div>
+      </div>
+    </div>
+    <div class="caption">Чат: пузыри, Markdown, блок кода, потоковый ответ</div>
+  </div>
+
+  <!-- ЭКРАН 2: диалоги -->
+  <div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span>LTE ▪ 86%</span></div>
+      <div class="header">
+        <div class="iconbtn"><svg viewBox="0 0 24 24" fill="#E9EDF5"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div>
+        <div class="grow" style="padding-left:8px"><div class="title">Диалоги</div></div>
+        <div class="iconbtn"><svg viewBox="0 0 24 24" fill="#93A1B5"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+      </div>
+      <div class="body" style="padding:0">
+        <div class="conv sel">
+          <div class="t">Как настроить VPN на роутере?</div>
+          <div class="p">Зависит от задачи. Для простого распознавания — от нескольких тысяч примеров…</div>
+          <div class="m">20 сент., 9:40 · 8 сообщ.</div>
+        </div>
+        <div class="conv">
+          <div class="t">План тренировок на неделю</div>
+          <div class="p">Держи план: Пн — грудь и трицепс, Ср — спина, Пт — ноги, Вс — кардио 40 минут…</div>
+          <div class="m">19 сент., 21:12 · 12 сообщ.</div>
+        </div>
+        <div class="conv">
+          <div class="t">Резюме для backend-разработчика</div>
+          <div class="p">Собрал структуру: профиль, стек, опыт в цифрах, проекты, образование…</div>
+          <div class="m">18 сент., 14:03 · 24 сообщ.</div>
+        </div>
+        <div class="conv">
+          <div class="t">Перевод письма клиенту</div>
+          <div class="p">Dear Michael, thank you for your patience regarding the delivery timeline…</div>
+          <div class="m">17 сент., 11:47 · 6 сообщ.</div>
+        </div>
+      </div>
+      <div class="inputbar" style="justify-content:center;color:var(--muted);font-size:12px;padding:12px">
+        долгое нажатие — переименовать / очистить / удалить
+      </div>
+    </div>
+    <div class="caption">Диалоги: локальная история, переименование, удаление</div>
+  </div>
+
+  <!-- ЭКРАН 3: настройки -->
+  <div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span>LTE ▪ 86%</span></div>
+      <div class="header">
+        <div class="iconbtn"><svg viewBox="0 0 24 24" fill="#E9EDF5"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div>
+        <div class="grow" style="padding-left:8px"><div class="title">Настройки</div></div>
+        <div style="background:var(--accent);color:#fff;border-radius:14px;padding:9px 16px;font-size:13px">Сохранить</div>
+      </div>
+      <div class="body" style="padding:4px 16px 20px">
+        <div class="section">Подключение</div>
+        <div class="label">Адрес сервера (Base URL)</div>
+        <div class="setfield">https://api.openai.com/v1</div>
+        <div class="label">API-ключ</div>
+        <div class="setfield">sk-proj-••••••••••••••••••••••</div>
+        <div class="label">Модель</div>
+        <div class="btnrow"><div class="setfield" style="flex:1">gpt-6-astra</div><div class="btn" style="flex:0 0 auto;padding:11px 16px">Выбрать</div></div>
+        <div class="btn" style="margin-top:10px">Проверить соединение</div>
+
+        <div class="section">Поведение</div>
+        <div class="label">Системный промпт</div>
+        <div class="setfield" style="border-radius:14px;white-space:normal;line-height:1.45">Ты — Modar AI, дружелюбный и точный ассистент…</div>
+        <div class="label">Температура (креативность)</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="flex:1;height:4px;background:var(--surface-alt);border-radius:2px;position:relative">
+            <div style="position:absolute;left:0;top:0;height:4px;width:47%;background:var(--accent);border-radius:2px"></div>
+            <div style="position:absolute;left:47%;top:-6px;width:16px;height:16px;border-radius:50%;background:var(--accent)"></div>
+          </div>
+          <div style="font-size:14px">0.7</div>
+        </div>
+        <div class="label">Максимум токенов ответа</div>
+        <div class="setfield">0 — без ограничения</div>
+        <div class="switchrow"><span>Потоковый ответ (печать по словам)</span><span class="switch on"><i></i></span></div>
+
+        <div class="section">Голос</div>
+        <div class="switchrow"><span>Озвучивать ответы ассистента</span><span class="switch on"><i></i></span></div>
+        <div class="label">Язык распознавания и озвучивания</div>
+        <div class="setfield">ru-RU</div>
+        <div class="note">Ключ API хранится только на этом устройстве и отправляется напрямую в выбранный вами сервис.</div>
+      </div>
+    </div>
+    <div class="caption">Настройки: любой OpenAI-совместимый сервис, проверка связи</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# Сборка
+build/
+.gradle/
+local.properties
+*.apk
+*.aab
+*.dex
+*.class
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Android Studio / Gradle
+gradle/wrapper/gradle-wrapper.jar
+captures/
+
+# Временные файлы скриптов сборки
+tools/.toolchain/
+
+# Готовые сборки
+dist/
