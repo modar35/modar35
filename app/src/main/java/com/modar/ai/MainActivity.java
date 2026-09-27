@@ -19,6 +19,7 @@ public class MainActivity extends Activity {
         trips = findViewById(R.id.trips_content);
         profile = findViewById(R.id.profile_content);
         orderList = findViewById(R.id.order_list);
+        loadSavedOrders();
 
         findViewById(R.id.tab_orders).setOnClickListener(v -> showTab(0));
         findViewById(R.id.tab_trips).setOnClickListener(v -> showTab(1));
@@ -65,10 +66,27 @@ public class MainActivity extends Activity {
                 if (from.getText().toString().trim().isEmpty() || to.getText().toString().trim().isEmpty()) {
                     Toast.makeText(this, "Укажите адреса загрузки и выгрузки", Toast.LENGTH_LONG).show();
                 } else {
+                    String record = from.getText().toString().trim() + "\u001f" + to.getText().toString().trim() + "\u001f" + cargo.getText().toString().trim() + "\u001f" + weight.getText().toString().trim() + "\u001f" + price.getText().toString().trim() + "\u001f" + vehicle.getSelectedItem().toString();
+                    saveOrder(record);
                     addOrderCard(from.getText().toString().trim(), to.getText().toString().trim(), cargo.getText().toString().trim(), weight.getText().toString().trim(), price.getText().toString().trim(), vehicle.getSelectedItem().toString());
                     Toast.makeText(this, "Заявка опубликована. Ищем машину рядом", Toast.LENGTH_LONG).show();
                 }
             }).setNegativeButton("Отмена", null).show();
+    }
+
+    private void saveOrder(String record) {
+        android.content.SharedPreferences p = getSharedPreferences("cargo_orders", MODE_PRIVATE);
+        String old = p.getString("items", "");
+        p.edit().putString("items", old.isEmpty() ? record : old + "\u001e" + record).apply();
+    }
+
+    private void loadSavedOrders() {
+        String all = getSharedPreferences("cargo_orders", MODE_PRIVATE).getString("items", "");
+        if (all.isEmpty()) return;
+        for (String record : all.split("\\u001e")) {
+            String[] x = record.split("\\u001f", -1);
+            if (x.length == 6) addOrderCard(x[0], x[1], x[2], x[3], x[4], x[5]);
+        }
     }
 
     private void addOrderCard(String from, String to, String cargo, String weight, String price, String vehicle) {
