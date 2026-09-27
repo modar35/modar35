@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
         findViewById(R.id.btn_create).setOnClickListener(v -> createOrder());
         findViewById(R.id.btn_add_trip).setOnClickListener(v -> Toast.makeText(this, "Раздел «Мои рейсы» готовится к подключению", Toast.LENGTH_SHORT).show());
         findViewById(R.id.btn_support).setOnClickListener(v -> Toast.makeText(this, "Поддержка: ответим в течение 5 минут", Toast.LENGTH_SHORT).show());
+        findViewById(R.id.btn_login).setOnClickListener(v -> showLogin());
         showTab(0);
     }
 
@@ -68,11 +69,35 @@ public class MainActivity extends Activity {
                 } else {
                     String record = from.getText().toString().trim() + "\u001f" + to.getText().toString().trim() + "\u001f" + cargo.getText().toString().trim() + "\u001f" + weight.getText().toString().trim() + "\u001f" + price.getText().toString().trim() + "\u001f" + vehicle.getSelectedItem().toString();
                     saveOrder(record);
+                    String json = "{\"from\":\"" + safe(from.getText().toString()) + "\",\"to\":\"" + safe(to.getText().toString()) + "\",\"cargo\":\"" + safe(cargo.getText().toString()) + "\",\"weight\":\"" + safe(weight.getText().toString()) + "\",\"vehicle\":\"" + safe(vehicle.getSelectedItem().toString()) + "\",\"price\":\"" + safe(price.getText().toString()) + "\"}";
+                    ApiClient.post("/api/orders", json, getSharedPreferences("cargo_auth", MODE_PRIVATE).getString("token", ""), (ok, ignored) -> {});
                     addOrderCard(from.getText().toString().trim(), to.getText().toString().trim(), cargo.getText().toString().trim(), weight.getText().toString().trim(), price.getText().toString().trim(), vehicle.getSelectedItem().toString());
                     Toast.makeText(this, "Заявка опубликована. Ищем машину рядом", Toast.LENGTH_LONG).show();
                 }
             }).setNegativeButton("Отмена", null).show();
     }
+
+    private void showLogin() {
+        final EditText phone = field("Номер телефона");
+        new AlertDialog.Builder(this).setTitle("Вход в Грузовичок").setMessage("Отправим код подтверждения по SMS")
+            .setView(phone).setPositiveButton("Получить код", (d, w) -> {
+                String p = phone.getText().toString().trim();
+                ApiClient.post("/api/auth/request-code", "{\"phone\":\"" + p + "\"}", "", (ok, response) -> runOnUiThread(() -> {
+                    if (ok) showCodeDialog(p); else Toast.makeText(this, "Сервер недоступен. Проверьте адрес API", Toast.LENGTH_LONG).show();
+                }));
+            }).setNegativeButton("Отмена", null).show();
+    }
+
+    private void showCodeDialog(final String phone) {
+        final EditText code = field("Код из SMS");
+        new AlertDialog.Builder(this).setTitle("Подтверждение номера").setView(code)
+            .setPositiveButton("Войти", (d, w) -> ApiClient.post("/api/auth/verify-code", "{\"phone\":\"" + phone + "\",\"code\":\"" + code.getText().toString().trim() + "\",\"role\":\"driver\"}", "", (ok, response) -> runOnUiThread(() -> {
+                if (ok) { String token = response.replaceAll(".*\\\"token\\\":\\\"([^\\\"]+).*", "$1"); getSharedPreferences("cargo_auth", MODE_PRIVATE).edit().putString("token", token).apply(); Toast.makeText(this, "Вы вошли как водитель", Toast.LENGTH_LONG).show(); }
+                else Toast.makeText(this, "Неверный код или сервер недоступен", Toast.LENGTH_LONG).show();
+            }))).setNegativeButton("Отмена", null).show();
+    }
+
+    private String safe(String value) { return value.replace("\\", "\\\\").replace("\"", "\\\""); }
 
     private void saveOrder(String record) {
         android.content.SharedPreferences p = getSharedPreferences("cargo_orders", MODE_PRIVATE);
