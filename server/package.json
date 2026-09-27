@@ -1,0 +1,8 @@
+{
+  "name": "gruzovichok-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API сервиса Грузовичок",
+  "scripts": { "start": "node index.js" },
+  "engines": { "node": ">=18" }
+}
