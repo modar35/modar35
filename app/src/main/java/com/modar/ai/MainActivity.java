@@ -20,12 +20,16 @@ public class MainActivity extends Activity {
         profile = findViewById(R.id.profile_content);
         orderList = findViewById(R.id.order_list);
         loadSavedOrders();
+        updateTrips();
 
         findViewById(R.id.tab_orders).setOnClickListener(v -> showTab(0));
         findViewById(R.id.tab_trips).setOnClickListener(v -> showTab(1));
         findViewById(R.id.tab_profile).setOnClickListener(v -> showTab(2));
         findViewById(R.id.btn_filter).setOnClickListener(v -> showFilter());
         findViewById(R.id.btn_create).setOnClickListener(v -> createOrder());
+        findViewById(R.id.take_order_1).setOnClickListener(v -> acceptOrder("Химки → Мытищи · 1 800 ₽"));
+        findViewById(R.id.take_order_2).setOnClickListener(v -> acceptOrder("Центр → Подольск · 3 500 ₽"));
+        findViewById(R.id.take_order_3).setOnClickListener(v -> acceptOrder("Балашиха → Москва · 950 ₽"));
         findViewById(R.id.btn_add_trip).setOnClickListener(v -> Toast.makeText(this, "Раздел «Мои рейсы» готовится к подключению", Toast.LENGTH_SHORT).show());
         findViewById(R.id.btn_support).setOnClickListener(v -> Toast.makeText(this, "Поддержка: ответим в течение 5 минут", Toast.LENGTH_SHORT).show());
         findViewById(R.id.btn_login).setOnClickListener(v -> showLogin());
@@ -39,6 +43,13 @@ public class MainActivity extends Activity {
         findViewById(R.id.tab_orders).setSelected(tab == 0);
         findViewById(R.id.tab_trips).setSelected(tab == 1);
         findViewById(R.id.tab_profile).setSelected(tab == 2);
+    }
+
+    private void acceptOrder(String title) {
+        getSharedPreferences("cargo_trips", MODE_PRIVATE).edit().putString("active", title).apply();
+        updateTrips();
+        new AlertDialog.Builder(this).setTitle("Заказ принят").setMessage(title + "\n\nСвяжитесь с клиентом и начните маршрут, когда будете готовы.")
+            .setPositiveButton("Открыть мои рейсы", (d, w) -> showTab(1)).setNegativeButton("Остаться в заказах", null).show();
     }
 
     private void showFilter() {
@@ -75,6 +86,12 @@ public class MainActivity extends Activity {
                     Toast.makeText(this, "Заявка опубликована. Ищем машину рядом", Toast.LENGTH_LONG).show();
                 }
             }).setNegativeButton("Отмена", null).show();
+    }
+
+    private void updateTrips() {
+        String active = getSharedPreferences("cargo_trips", MODE_PRIVATE).getString("active", "");
+        android.widget.TextView status = findViewById(R.id.trips_status);
+        if (status != null) status.setText(active.isEmpty() ? "✓  Сегодня · 0 активных рейсов" : "●  Активный рейс\n" + active);
     }
 
     private void showLogin() {
