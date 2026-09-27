@@ -45,14 +45,31 @@ public class MainActivity extends Activity {
     }
 
     private void createOrder() {
-        final EditText from = new EditText(this); from.setHint("Откуда, например: Химки");
-        final EditText to = new EditText(this); to.setHint("Куда, например: Мытищи");
-        final EditText cargo = new EditText(this); cargo.setHint("Что везём и вес");
+        final EditText from = field("Откуда, например: Химки");
+        final EditText to = field("Куда, например: Мытищи");
+        final EditText cargo = field("Что везём, например: мебель");
+        final EditText weight = field("Вес груза, кг"); weight.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        final EditText date = field("Дата и время загрузки");
+        final EditText price = field("Предложенная стоимость, ₽"); price.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        final android.widget.Spinner vehicle = new android.widget.Spinner(this);
+        vehicle.setAdapter(new android.widget.ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,
+                new String[]{"Газель тент", "Газель термо", "Грузовик до 5 т", "Грузовик до 10 т"}));
         android.widget.LinearLayout box = new android.widget.LinearLayout(this);
         box.setOrientation(android.widget.LinearLayout.VERTICAL); box.setPadding(48, 0, 48, 0);
-        box.addView(from); box.addView(to); box.addView(cargo);
-        new AlertDialog.Builder(this).setTitle("Новая заявка").setMessage("Опишите маршрут — водители увидят заказ сразу")
-            .setView(box).setPositiveButton("Опубликовать", (d, w) -> Toast.makeText(this, "Заявка опубликована. Ищем машину рядом", Toast.LENGTH_LONG).show())
-            .setNegativeButton("Отмена", null).show();
+        box.addView(from); box.addView(to); box.addView(cargo); box.addView(weight); box.addView(vehicle); box.addView(date); box.addView(price);
+        new AlertDialog.Builder(this).setTitle("Новая заявка")
+            .setMessage("Заполните маршрут — подходящие водители увидят заказ сразу")
+            .setView(box).setPositiveButton("Опубликовать", (d, w) -> {
+                if (from.getText().toString().trim().isEmpty() || to.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(this, "Укажите адреса загрузки и выгрузки", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Заявка опубликована. Ищем машину рядом", Toast.LENGTH_LONG).show();
+                }
+            }).setNegativeButton("Отмена", null).show();
+    }
+
+    private EditText field(String hint) {
+        EditText e = new EditText(this); e.setHint(hint); e.setSingleLine(true);
+        e.setPadding(0, 12, 0, 4); return e;
     }
 }
