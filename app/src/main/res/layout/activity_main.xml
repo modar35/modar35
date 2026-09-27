@@ -19,6 +19,7 @@
           <include layout="@layout/item_cargo_1"/>
           <include layout="@layout/item_cargo_2"/>
           <include layout="@layout/item_cargo_3"/>
+          <LinearLayout android:id="@+id/order_list" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content"/>
           <TextView android:id="@+id/btn_create" android:text="＋  Создать заявку на перевозку" android:gravity="center" android:textColor="@color/white" android:textSize="16sp" android:fontFamily="sans-serif-medium" android:background="@drawable/btn_primary" android:layout_marginTop="18dp" android:layout_width="match_parent" android:layout_height="54dp"/>
         </LinearLayout>
         <LinearLayout android:id="@+id/trips_content" android:visibility="gone" android:orientation="vertical" android:padding="20dp" android:layout_width="match_parent" android:layout_height="wrap_content">

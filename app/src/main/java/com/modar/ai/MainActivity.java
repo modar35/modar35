@@ -10,6 +10,7 @@ import android.widget.Toast;
 /** Главный экран «Грузовичок»: заказы для газелей и грузовых автомобилей. */
 public class MainActivity extends Activity {
     private View orders, trips, profile;
+    private android.widget.LinearLayout orderList;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -17,6 +18,7 @@ public class MainActivity extends Activity {
         orders = findViewById(R.id.orders_content);
         trips = findViewById(R.id.trips_content);
         profile = findViewById(R.id.profile_content);
+        orderList = findViewById(R.id.order_list);
 
         findViewById(R.id.tab_orders).setOnClickListener(v -> showTab(0));
         findViewById(R.id.tab_trips).setOnClickListener(v -> showTab(1));
@@ -63,9 +65,22 @@ public class MainActivity extends Activity {
                 if (from.getText().toString().trim().isEmpty() || to.getText().toString().trim().isEmpty()) {
                     Toast.makeText(this, "Укажите адреса загрузки и выгрузки", Toast.LENGTH_LONG).show();
                 } else {
+                    addOrderCard(from.getText().toString().trim(), to.getText().toString().trim(), cargo.getText().toString().trim(), weight.getText().toString().trim(), price.getText().toString().trim(), vehicle.getSelectedItem().toString());
                     Toast.makeText(this, "Заявка опубликована. Ищем машину рядом", Toast.LENGTH_LONG).show();
                 }
             }).setNegativeButton("Отмена", null).show();
+    }
+
+    private void addOrderCard(String from, String to, String cargo, String weight, String price, String vehicle) {
+        android.widget.TextView card = new android.widget.TextView(this);
+        String load = cargo.isEmpty() ? "Груз" : cargo;
+        String mass = weight.isEmpty() ? "вес не указан" : weight + " кг";
+        String cost = price.isEmpty() ? "Цена договорная" : price + " ₽";
+        card.setText("Новая заявка  ·  только что\n" + from + "  →  " + to + "\n" + load + " · " + mass + "\n" + vehicle + " · " + cost + "\n\nОжидает откликов водителей");
+        card.setTextColor(getResources().getColor(R.color.text)); card.setTextSize(14); card.setPadding(28, 24, 28, 24);
+        card.setBackgroundResource(R.drawable.card_bg);
+        android.widget.LinearLayout.LayoutParams lp = new android.widget.LinearLayout.LayoutParams(-1, -2); lp.setMargins(0, 16, 0, 0);
+        orderList.addView(card, 0, lp);
     }
 
     private EditText field(String hint) {
