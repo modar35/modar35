@@ -10,8 +10,8 @@ android {
         applicationId = "com.modar.ai"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 13
+        versionName = "2.2"
     }
 
     buildTypes {
