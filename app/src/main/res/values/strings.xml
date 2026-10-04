@@ -1,14 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ИИ Ассистент</string>
-    <string name="send">Отправить</string>
-    <string name="stop">Остановить</string>
-    <string name="input_hint">Сообщение…</string>
-    <string name="welcome_title">Чем помочь?</string>
-    <string name="welcome_sub">Спросите текстом, голосом или пришлите картинку</string>
-    <string name="attach_ready">Изображение прикреплено</string>
-    <string name="chats_title">Диалоги</string>
-    <string name="settings_title">Настройки</string>
-    <string name="save">Сохранить</string>
-    <string name="privacy_note">Ключ API хранится только на этом устройстве и отправляется напрямую в выбранный вами сервис. Приложение не собирает телеметрию и не имеет рекламы.</string>
+    <string name="app_name">Грузовичок</string><string name="send">Отправить</string><string name="stop">Остановить</string><string name="input_hint">Сообщение…</string><string name="welcome_title">Грузовичок</string><string name="welcome_sub">Доставка грузов для газелей и грузовых авто</string><string name="attach_ready">Груз прикреплён</string><string name="chats_title">Заказы</string><string name="settings_title">Профиль</string><string name="save">Сохранить</string><string name="privacy_note">Ваши данные защищены.</string>
 </resources>
