@@ -1,0 +1,9 @@
+package com.modar.ai;
+import android.content.Context;import android.graphics.Canvas;import android.graphics.Color;import android.graphics.Paint;import android.graphics.Path;import android.view.View;import android.view.MotionEvent;
+/** Лёгкий превью-слой карты на главном экране; полная карта открывается кнопкой 2ГИС. */
+public class MapPreviewView extends View{
+ private Paint p=new Paint(1); private Path path=new Path(); public MapPreviewView(Context c){super(c);setLayerType(View.LAYER_TYPE_SOFTWARE,null);}
+ protected void onDraw(Canvas c){super.onDraw(c);int w=getWidth(),h=getHeight();c.drawColor(Color.rgb(232,237,226));p.setStyle(Paint.Style.STROKE);p.setStrokeWidth(2);p.setColor(Color.rgb(207,217,201));for(int x=-h;x<w+h;x+=55)c.drawLine(x,0,x+h,h,p);for(int y=20;y<h;y+=48)c.drawLine(0,y,w,y,p);p.setColor(Color.rgb(190,201,188));p.setStrokeWidth(7);path.reset();path.moveTo(0,h*.72f);path.cubicTo(w*.22f,h*.62f,w*.35f,h*.84f,w*.54f,h*.5f);path.cubicTo(w*.67f,h*.25f,w*.82f,h*.44f,w,h*.17f);c.drawPath(path,p);p.setColor(Color.rgb(250,255,249));p.setStrokeWidth(3);path.reset();path.moveTo(0,h*.52f);path.lineTo(w*.32f,h*.38f);path.lineTo(w*.58f,h*.56f);path.lineTo(w,h*.42f);c.drawPath(path,p);pin(c,w*.27f,h*.46f,"1");pin(c,w*.63f,h*.32f,"2");pin(c,w*.79f,h*.68f,"3");p.setStyle(Paint.Style.FILL);p.setColor(Color.rgb(45,115,80));c.drawCircle(w*.48f,h*.58f,10,p);p.setColor(Color.WHITE);c.drawCircle(w*.48f,h*.58f,4,p);}
+ private void pin(Canvas c,float x,float y,String n){p.setStyle(Paint.Style.FILL);p.setColor(Color.rgb(242,139,82));c.drawCircle(x,y,15,p);p.setColor(Color.WHITE);p.setTextSize(12);p.setTextAlign(Paint.Align.CENTER);c.drawText(n,x,y+4,p);}
+ public boolean onTouchEvent(MotionEvent e){if(e.getAction()==MotionEvent.ACTION_UP){getContext().startActivity(new android.content.Intent(getContext(),MapActivity.class));return true;}return true;}
+}
