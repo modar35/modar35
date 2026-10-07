@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Базар — бесплатные объявления</title>
+  <style>
+    :root {
+      --green: #00a046;
+      --green-d: #00853a;
+      --bg: #f4f5f7;
+      --text: #1a1a1a;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --shadow: 0 8px 30px rgba(17, 24, 39, .08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font-family: inherit; }
+    .topbar { position: sticky; top: 0; z-index: 40; background: #fff; border-bottom: 1px solid var(--line); }
+    .inner { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; gap: 14px; padding: 12px 16px; }
+    .logo { font-weight: 800; font-size: 24px; color: var(--green); white-space: nowrap; cursor: pointer; }
+    .search { flex: 1; display: flex; background: #f3f4f6; border-radius: 12px; overflow: hidden; border: 1px solid transparent; }
+    .search input { flex: 1; border: 0; background: transparent; padding: 12px 14px; outline: none; font-size: 15px; }
+    .search button, .cta { border: 0; background: var(--green); color: #fff; padding: 10px 16px; font-weight: 700; cursor: pointer; border-radius: 12px; }
+    .search button { border-radius: 0; }
+    .cta:hover, .search button:hover { background: var(--green-d); }
+    .ghost { background: none; border: 0; cursor: pointer; font-weight: 600; padding: 8px 10px; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 20px 16px 48px; }
+    .hero { background: linear-gradient(135deg, #0f172a, #134e32); color: #fff; border-radius: 22px; padding: 32px; margin-bottom: 22px; }
+    .hero h1 { font-size: 32px; margin-bottom: 8px; }
+    .hero p { opacity: .85; }
+    .stats { display: flex; gap: 28px; margin-top: 18px; }
+    .stats b { display: block; font-size: 22px; }
+    .stats span { opacity: .7; font-size: 13px; }
+    .cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-bottom: 22px; }
+    .cat { background: #fff; border-radius: 14px; padding: 14px 8px; text-align: center; box-shadow: var(--shadow); cursor: pointer; border: 1px solid transparent; }
+    .cat:hover { border-color: var(--green); }
+    .cat .e { font-size: 26px; }
+    .cat .n { font-size: 12px; font-weight: 700; margin-top: 6px; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .filters select { border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 8px 10px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+    .card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); cursor: pointer; }
+    .thumb { height: 160px; display: grid; place-items: center; font-size: 56px; position: relative; }
+    .badge { position: absolute; left: 10px; top: 10px; background: #111827; color: #fff; font-size: 11px; padding: 4px 8px; border-radius: 999px; }
+    .fav { position: absolute; right: 10px; top: 10px; width: 34px; height: 34px; border-radius: 50%; border: 0; background: #fff; cursor: pointer; }
+    .body { padding: 12px 14px 16px; }
+    .price { font-weight: 800; font-size: 18px; }
+    .title { font-size: 14px; font-weight: 600; min-height: 38px; margin-top: 4px; }
+    .meta { color: var(--muted); font-size: 12px; margin-top: 8px; display: flex; justify-content: space-between; }
+    .detail { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
+    .gallery { border-radius: 20px; min-height: 280px; display: grid; place-items: center; font-size: 96px; }
+    .side, .desc, .form { background: #fff; border-radius: 20px; padding: 22px; box-shadow: var(--shadow); }
+    .side .price { font-size: 28px; }
+    .seller { display: flex; gap: 12px; align-items: center; margin: 16px 0; }
+    .avatar { width: 48px; height: 48px; border-radius: 50%; background: #d1fae5; display: grid; place-items: center; font-weight: 800; }
+    .phone { font-size: 18px; font-weight: 700; margin: 8px 0 16px; }
+    .form { max-width: 720px; margin: 0 auto; }
+    .form label { display: block; font-size: 13px; font-weight: 700; margin: 12px 0 6px; }
+    .form input, .form select, .form textarea { width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; font-size: 15px; }
+    .form textarea { min-height: 110px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .empty { text-align: center; padding: 50px 16px; color: var(--muted); }
+    .back { background: none; border: 0; cursor: pointer; color: var(--muted); margin-bottom: 12px; font-weight: 600; }
+    footer { text-align: center; color: var(--muted); font-size: 13px; padding: 8px 16px 32px; }
+    @media (max-width: 800px) {
+      .detail, .row2 { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 24px; }
+      .search { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    const CATS = [
+      { id: "auto", name: "Авто", e: "🚗", color: "#dbeafe" },
+      { id: "realty", name: "Недвижимость", e: "🏠", color: "#fef3c7" },
+      { id: "job", name: "Работа", e: "💼", color: "#e0e7ff" },
+      { id: "services", name: "Услуги", e: "🛠", color: "#d1fae5" },
+      { id: "electronics", name: "Электроника", e: "📱", color: "#fce7f3" },
+      { id: "home", name: "Для дома", e: "🛋", color: "#ede9fe" },
+      { id: "fashion", name: "Одежда", e: "👕", color: "#ffedd5" },
+      { id: "hobby", name: "Хобби", e: "🎸", color: "#cffafe" }
+    ];
+    const CITIES = ["Москва", "Санкт-Петербург", "Казань", "Новосибирск", "Екатеринбург", "Краснодар"];
+    const SEED = [
+      { id: "1", title: "Toyota Camry 2020, 45 000 км", price: 2450000, cat: "auto", city: "Москва", desc: "Один владелец, сервисная книжка. Кожа, камера, подогревы. Без ДТП.", seller: "Алексей", phone: "+7 900 111-22-33", date: "Сегодня" },
+      { id: "2", title: "2-к квартира у метро, 54 м²", price: 12500000, cat: "realty", city: "Санкт-Петербург", desc: "Светлая квартира, кухня 12 м², балкон. Чистый подъезд.", seller: "Мария", phone: "+7 911 555-01-02", date: "Вчера" },
+      { id: "3", title: "iPhone 15 Pro 256 ГБ", price: 89900, cat: "electronics", city: "Казань", desc: "Отличное состояние, полный комплект, чехол в подарок.", seller: "Игорь", phone: "+7 917 222-33-44", date: "2 дня назад" },
+      { id: "4", title: "Диван угловой, как новый", price: 24900, cat: "home", city: "Москва", desc: "Ткань рогожка, ящик для белья. Самовывоз из САО.", seller: "Ольга", phone: "+7 926 100-20-30", date: "Сегодня" },
+      { id: "5", title: "Велосипед горный Trek", price: 42000, cat: "hobby", city: "Екатеринбург", desc: "Рама M, 29 дюймов, гидравлика. Хранился в квартире.", seller: "Павел", phone: "+7 343 700-11-22", date: "3 дня назад" },
+      { id: "6", title: "Куртка зимняя North Face", price: 8900, cat: "fashion", city: "Новосибирск", desc: "Размер L. Носили один сезон, без дефектов.", seller: "Анна", phone: "+7 913 444-55-66", date: "Вчера" },
+      { id: "7", title: "Ремонт квартир под ключ", price: 0, cat: "services", city: "Краснодар", desc: "Бригада 12 лет. Смета бесплатно. Гарантия 3 года.", seller: "Сергей", phone: "+7 918 777-88-99", date: "Сегодня" },
+      { id: "8", title: "Менеджер маркетплейсов, удалёнка", price: 90000, cat: "job", city: "Москва", desc: "Ведение кабинета WB/Ozon. Опыт от 1 года. Оформление по ТК.", seller: "HR Наталья", phone: "+7 495 000-12-12", date: "Сегодня" }
+    ];
+
+    const store = {
+      ads() { return [...JSON.parse(localStorage.getItem("bazar_ads") || "[]"), ...SEED]; },
+      add(ad) {
+        const extra = JSON.parse(localStorage.getItem("bazar_ads") || "[]");
+        extra.unshift(ad);
+        localStorage.setItem("bazar_ads", JSON.stringify(extra));
+      },
+      favs: JSON.parse(localStorage.getItem("bazar_favs") || "[]"),
+      toggle(id) {
+        this.favs = this.favs.includes(id) ? this.favs.filter(x => x !== id) : [...this.favs, id];
+        localStorage.setItem("bazar_favs", JSON.stringify(this.favs));
+      }
+    };
+
+    let S = { view: "home", q: "", cat: "", city: "", sort: "new", adId: null };
+    const catOf = id => CATS.find(c => c.id === id) || { name: "", e: "📦", color: "#eee" };
+    const money = n => n ? n.toLocaleString("ru-RU") + " ₽" : "Цена договорная";
+
+    function go(p) { S = { ...S, ...p }; render(); window.scrollTo(0, 0); }
+
+    function header() {
+      return `<header class="topbar"><div class="inner">
+        <div class="logo" data-go="home">Базар</div>
+        <form class="search" id="sf"><input name="q" placeholder="Поиск по объявлениям" value="${S.q}" /><button>Найти</button></form>
+        <button class="ghost" data-go="favs">♡ Избранное</button>
+        <button class="cta" data-go="post">+ Разместить</button>
+      </div></header>`;
+    }
+
+    function card(a) {
+      const c = catOf(a.cat);
+      return `<article class="card" data-ad="${a.id}">
+        <div class="thumb" style="background:${c.color}">
+          ${c.e}
+          <span class="badge">${c.name}</span>
+          <button class="fav" data-fav="${a.id}">${store.favs.includes(a.id) ? "♥" : "♡"}</button>
+        </div>
+        <div class="body">
+          <div class="price">${money(a.price)}</div>
+          <div class="title">${a.title}</div>
+          <div class="meta"><span>${a.city}</span><span>${a.date}</span></div>
+        </div>
+      </article>`;
+    }
+
+    function home() {
+      let ads = store.ads().filter(a => {
+        const q = S.q.toLowerCase();
+        return (!q || a.title.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q))
+          && (!S.cat || a.cat === S.cat) && (!S.city || a.city === S.city);
+      });
+      if (S.sort === "cheap") ads.sort((a,b) => a.price - b.price);
+      if (S.sort === "exp") ads.sort((a,b) => b.price - a.price);
+      const name = catOf(S.cat).name;
+      return `${header()}<main class="wrap">
+        ${!S.q && !S.cat ? `<section class="hero"><h1>Бесплатные объявления рядом с вами</h1>
+          <p>Как Авито, без комиссии: покупайте, продавайте и находите работу.</p>
+          <div class="stats"><div><b>${store.ads().length}+</b><span>объявлений</span></div>
+          <div><b>0 ₽</b><span>за размещение</span></div><div><b>8</b><span>категорий</span></div></div></section>` : ""}
+        <div class="cats">${CATS.map(c => `<div class="cat" data-cat="${c.id}"><div class="e">${c.e}</div><div class="n">${c.name}</div></div>`).join("")}</div>
+        <div class="toolbar"><h2>${name || (S.q ? "Поиск: «" + S.q + "»" : "Свежие объявления")}</h2>
+          <div class="filters">
+            <select id="city"><option value="">Все города</option>${CITIES.map(c => `<option ${S.city===c?"selected":""}>${c}</option>`).join("")}</select>
+            <select id="sort">
+              <option value="new" ${S.sort==="new"?"selected":""}>Сначала новые</option>
+              <option value="cheap" ${S.sort==="cheap"?"selected":""}>Дешевле</option>
+              <option value="exp" ${S.sort==="exp"?"selected":""}>Дороже</option>
+            </select>
+          </div>
+        </div>
+        ${ads.length ? `<div class="grid">${ads.map(card).join("")}</div>` : `<div class="empty">Ничего не найдено</div>`}
+      </main><footer>Базар — бесплатная доска объявлений</footer>`;
+    }
+
+    function detail() {
+      const a = store.ads().find(x => x.id === S.adId);
+      if (!a) return home();
+      const c = catOf(a.cat);
+      return `${header()}<main class="wrap">
+        <button class="back" data-go="home">← Назад</button>
+        <div class="detail">
+          <div class="gallery" style="background:${c.color}">${c.e}</div>
+          <aside class="side">
+            <div class="price">${money(a.price)}</div>
+            <h2 style="margin:8px 0 12px">${a.title}</h2>
+            <div class="muted">${a.city} · ${a.date}</div>
+            <div class="seller"><div class="avatar">${a.seller[0]}</div><div><b>${a.seller}</b><div class="muted">Частное лицо</div></div></div>
+            <div class="phone">${a.phone}</div>
+            <button class="cta" style="width:100%" data-fav="${a.id}">${store.favs.includes(a.id) ? "В избранном" : "В избранное"}</button>
+          </aside>
+        </div>
+        <div class="desc" style="margin-top:16px"><h3>Описание</h3><p style="margin-top:10px;line-height:1.6">${a.desc}</p></div>
+      </main>`;
+    }
+
+    function favs() {
+      const ads = store.ads().filter(a => store.favs.includes(a.id));
+      return `${header()}<main class="wrap"><h2>Избранное</h2>
+        ${ads.length ? `<div class="grid" style="margin-top:16px">${ads.map(card).join("")}</div>` : `<div class="empty">Пока пусто. Нажмите ♡ на карточке.</div>`}
+      </main>`;
+    }
+
+    function post() {
+      return `${header()}<main class="wrap"><form class="form" id="pf">
+        <h2>Новое объявление — бесплатно</h2>
+        <p class="muted">Сохранится в этом браузере.</p>
+        <label>Заголовок</label><input name="title" required maxlength="80" />
+        <div class="row2"><div><label>Категория</label><select name="cat">${CATS.map(c=>`<option value="${c.id}">${c.name}</option>`).join("")}</select></div>
+        <div><label>Город</label><select name="city">${CITIES.map(c=>`<option>${c}</option>`).join("")}</select></div></div>
+        <div class="row2"><div><label>Цена, ₽ (0 = договорная)</label><input name="price" type="number" min="0" value="0" /></div>
+        <div><label>Телефон</label><input name="phone" required placeholder="+7 900 000-00-00" /></div></div>
+        <label>Ваше имя</label><input name="seller" required />
+        <label>Описание</label><textarea name="desc" required></textarea>
+        <button class="cta" style="margin-top:16px;width:100%">Опубликовать</button>
+      </form></main>`;
+    }
+
+    function render() {
+      const app = document.getElementById("app");
+      app.innerHTML = S.view === "detail" ? detail() : S.view === "favs" ? favs() : S.view === "post" ? post() : home();
+      app.querySelectorAll("[data-go]").forEach(el => el.onclick = e => { e.preventDefault(); go({ view: el.dataset.go, adId: null }); });
+      const sf = document.getElementById("sf");
+      if (sf) sf.onsubmit = e => { e.preventDefault(); go({ view: "home", q: sf.q.value.trim() }); };
+      app.querySelectorAll("[data-cat]").forEach(el => el.onclick = () => go({ view: "home", cat: el.dataset.cat }));
+      app.querySelectorAll("[data-ad]").forEach(el => el.onclick = e => { if (e.target.closest("[data-fav]")) return; go({ view: "detail", adId: el.dataset.ad }); });
+      app.querySelectorAll("[data-fav]").forEach(el => el.onclick = e => { e.stopPropagation(); store.toggle(el.dataset.fav); render(); });
+      const city = document.getElementById("city"); if (city) city.onchange = () => go({ city: city.value });
+      const sort = document.getElementById("sort"); if (sort) sort.onchange = () => go({ sort: sort.value });
+      const pf = document.getElementById("pf");
+      if (pf) pf.onsubmit = e => {
+        e.preventDefault();
+        const f = Object.fromEntries(new FormData(pf));
+        store.add({ id: String(Date.now()), title: f.title, price: Number(f.price)||0, cat: f.cat, city: f.city, desc: f.desc, seller: f.seller, phone: f.phone, date: "Сегодня" });
+        go({ view: "home", cat: "", q: "" });
+      };
+    }
+    render();
+  </script>
+</body>
+</html>
