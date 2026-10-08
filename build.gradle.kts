@@ -1,5 +1,4 @@
-// Корневой build-файл: приложение на чистом Java + Android framework,
-// без AndroidX/Kotlin — поэтому подключается только Android Gradle Plugin.
+// Нативная Android-оболочка 3D MOBA-прототипа на Java + WebView/WebGL.
 plugins {
     id("com.android.application") version "8.5.2" apply false
 }

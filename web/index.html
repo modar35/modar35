@@ -1,240 +1,204 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Базар — бесплатные объявления</title>
-  <style>
-    :root {
-      --green: #00a046;
-      --green-d: #00853a;
-      --bg: #f4f5f7;
-      --text: #1a1a1a;
-      --muted: #6b7280;
-      --line: #e5e7eb;
-      --shadow: 0 8px 30px rgba(17, 24, 39, .08);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); }
-    a { color: inherit; text-decoration: none; }
-    button, input, select, textarea { font-family: inherit; }
-    .topbar { position: sticky; top: 0; z-index: 40; background: #fff; border-bottom: 1px solid var(--line); }
-    .inner { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; gap: 14px; padding: 12px 16px; }
-    .logo { font-weight: 800; font-size: 24px; color: var(--green); white-space: nowrap; cursor: pointer; }
-    .search { flex: 1; display: flex; background: #f3f4f6; border-radius: 12px; overflow: hidden; border: 1px solid transparent; }
-    .search input { flex: 1; border: 0; background: transparent; padding: 12px 14px; outline: none; font-size: 15px; }
-    .search button, .cta { border: 0; background: var(--green); color: #fff; padding: 10px 16px; font-weight: 700; cursor: pointer; border-radius: 12px; }
-    .search button { border-radius: 0; }
-    .cta:hover, .search button:hover { background: var(--green-d); }
-    .ghost { background: none; border: 0; cursor: pointer; font-weight: 600; padding: 8px 10px; }
-    .wrap { max-width: 1180px; margin: 0 auto; padding: 20px 16px 48px; }
-    .hero { background: linear-gradient(135deg, #0f172a, #134e32); color: #fff; border-radius: 22px; padding: 32px; margin-bottom: 22px; }
-    .hero h1 { font-size: 32px; margin-bottom: 8px; }
-    .hero p { opacity: .85; }
-    .stats { display: flex; gap: 28px; margin-top: 18px; }
-    .stats b { display: block; font-size: 22px; }
-    .stats span { opacity: .7; font-size: 13px; }
-    .cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-bottom: 22px; }
-    .cat { background: #fff; border-radius: 14px; padding: 14px 8px; text-align: center; box-shadow: var(--shadow); cursor: pointer; border: 1px solid transparent; }
-    .cat:hover { border-color: var(--green); }
-    .cat .e { font-size: 26px; }
-    .cat .n { font-size: 12px; font-weight: 700; margin-top: 6px; }
-    .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
-    .filters select { border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 8px 10px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-    .card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); cursor: pointer; }
-    .thumb { height: 160px; display: grid; place-items: center; font-size: 56px; position: relative; }
-    .badge { position: absolute; left: 10px; top: 10px; background: #111827; color: #fff; font-size: 11px; padding: 4px 8px; border-radius: 999px; }
-    .fav { position: absolute; right: 10px; top: 10px; width: 34px; height: 34px; border-radius: 50%; border: 0; background: #fff; cursor: pointer; }
-    .body { padding: 12px 14px 16px; }
-    .price { font-weight: 800; font-size: 18px; }
-    .title { font-size: 14px; font-weight: 600; min-height: 38px; margin-top: 4px; }
-    .meta { color: var(--muted); font-size: 12px; margin-top: 8px; display: flex; justify-content: space-between; }
-    .detail { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
-    .gallery { border-radius: 20px; min-height: 280px; display: grid; place-items: center; font-size: 96px; }
-    .side, .desc, .form { background: #fff; border-radius: 20px; padding: 22px; box-shadow: var(--shadow); }
-    .side .price { font-size: 28px; }
-    .seller { display: flex; gap: 12px; align-items: center; margin: 16px 0; }
-    .avatar { width: 48px; height: 48px; border-radius: 50%; background: #d1fae5; display: grid; place-items: center; font-weight: 800; }
-    .phone { font-size: 18px; font-weight: 700; margin: 8px 0 16px; }
-    .form { max-width: 720px; margin: 0 auto; }
-    .form label { display: block; font-size: 13px; font-weight: 700; margin: 12px 0 6px; }
-    .form input, .form select, .form textarea { width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; font-size: 15px; }
-    .form textarea { min-height: 110px; }
-    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .muted { color: var(--muted); font-size: 13px; }
-    .empty { text-align: center; padding: 50px 16px; color: var(--muted); }
-    .back { background: none; border: 0; cursor: pointer; color: var(--muted); margin-bottom: 12px; font-weight: 600; }
-    footer { text-align: center; color: var(--muted); font-size: 13px; padding: 8px 16px 32px; }
-    @media (max-width: 800px) {
-      .detail, .row2 { grid-template-columns: 1fr; }
-      .hero h1 { font-size: 24px; }
-      .search { display: none; }
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#071016">
+  <meta name="description" content="Сумеречный разлом — оригинальная 3D MOBA. Начни тренировочный матч прямо сейчас.">
+  <title>Сумеречный разлом — 3D MOBA</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="app"></div>
-  <script>
-    const CATS = [
-      { id: "auto", name: "Авто", e: "🚗", color: "#dbeafe" },
-      { id: "realty", name: "Недвижимость", e: "🏠", color: "#fef3c7" },
-      { id: "job", name: "Работа", e: "💼", color: "#e0e7ff" },
-      { id: "services", name: "Услуги", e: "🛠", color: "#d1fae5" },
-      { id: "electronics", name: "Электроника", e: "📱", color: "#fce7f3" },
-      { id: "home", name: "Для дома", e: "🛋", color: "#ede9fe" },
-      { id: "fashion", name: "Одежда", e: "👕", color: "#ffedd5" },
-      { id: "hobby", name: "Хобби", e: "🎸", color: "#cffafe" }
-    ];
-    const CITIES = ["Москва", "Санкт-Петербург", "Казань", "Новосибирск", "Екатеринбург", "Краснодар"];
-    const SEED = [
-      { id: "1", title: "Toyota Camry 2020, 45 000 км", price: 2450000, cat: "auto", city: "Москва", desc: "Один владелец, сервисная книжка. Кожа, камера, подогревы. Без ДТП.", seller: "Алексей", phone: "+7 900 111-22-33", date: "Сегодня" },
-      { id: "2", title: "2-к квартира у метро, 54 м²", price: 12500000, cat: "realty", city: "Санкт-Петербург", desc: "Светлая квартира, кухня 12 м², балкон. Чистый подъезд.", seller: "Мария", phone: "+7 911 555-01-02", date: "Вчера" },
-      { id: "3", title: "iPhone 15 Pro 256 ГБ", price: 89900, cat: "electronics", city: "Казань", desc: "Отличное состояние, полный комплект, чехол в подарок.", seller: "Игорь", phone: "+7 917 222-33-44", date: "2 дня назад" },
-      { id: "4", title: "Диван угловой, как новый", price: 24900, cat: "home", city: "Москва", desc: "Ткань рогожка, ящик для белья. Самовывоз из САО.", seller: "Ольга", phone: "+7 926 100-20-30", date: "Сегодня" },
-      { id: "5", title: "Велосипед горный Trek", price: 42000, cat: "hobby", city: "Екатеринбург", desc: "Рама M, 29 дюймов, гидравлика. Хранился в квартире.", seller: "Павел", phone: "+7 343 700-11-22", date: "3 дня назад" },
-      { id: "6", title: "Куртка зимняя North Face", price: 8900, cat: "fashion", city: "Новосибирск", desc: "Размер L. Носили один сезон, без дефектов.", seller: "Анна", phone: "+7 913 444-55-66", date: "Вчера" },
-      { id: "7", title: "Ремонт квартир под ключ", price: 0, cat: "services", city: "Краснодар", desc: "Бригада 12 лет. Смета бесплатно. Гарантия 3 года.", seller: "Сергей", phone: "+7 918 777-88-99", date: "Сегодня" },
-      { id: "8", title: "Менеджер маркетплейсов, удалёнка", price: 90000, cat: "job", city: "Москва", desc: "Ведение кабинета WB/Ozon. Опыт от 1 года. Оформление по ТК.", seller: "HR Наталья", phone: "+7 495 000-12-12", date: "Сегодня" }
-    ];
+  <canvas id="world" aria-label="3D арена"></canvas>
+  <div class="world-vignette" aria-hidden="true"></div>
 
-    const store = {
-      ads() { return [...JSON.parse(localStorage.getItem("bazar_ads") || "[]"), ...SEED]; },
-      add(ad) {
-        const extra = JSON.parse(localStorage.getItem("bazar_ads") || "[]");
-        extra.unshift(ad);
-        localStorage.setItem("bazar_ads", JSON.stringify(extra));
-      },
-      favs: JSON.parse(localStorage.getItem("bazar_favs") || "[]"),
-      toggle(id) {
-        this.favs = this.favs.includes(id) ? this.favs.filter(x => x !== id) : [...this.favs, id];
-        localStorage.setItem("bazar_favs", JSON.stringify(this.favs));
-      }
-    };
+  <main id="lobby" class="lobby screen">
+    <header class="lobby-header">
+      <a class="brand" href="#home" aria-label="Сумеречный разлом — главная">
+        <span class="brand-mark"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2 36 11v18L20 38 4 29V11L20 2Z"/><path d="m13 9 8 8-8 14 15-13-8-7-7-2Z"/></svg></span>
+        <span class="brand-copy"><b>СУМЕРЕЧНЫЙ</b><small>РАЗЛОМ</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Главная навигация">
+        <button class="nav-link active" data-nav="play">ИГРАТЬ</button>
+        <button class="nav-link" data-nav="heroes">ГЕРОИ</button>
+        <button class="nav-link" data-nav="about">ОБ ИГРЕ</button>
+      </nav>
+      <div class="header-actions">
+        <button id="settings-open" class="header-icon" type="button" aria-label="Настройки" title="Настройки">⚙</button>
+        <button id="profile-open" class="profile-chip" type="button" aria-label="Личный кабинет">
+          <span id="account-dot" class="online-dot offline"></span>
+          <span><b id="profile-name">СТРАННИК</b><small id="profile-level">Локальный профиль · 1 ур.</small></span>
+          <span id="profile-level-number" class="profile-level">01</span>
+        </button>
+      </div>
+    </header>
 
-    let S = { view: "home", q: "", cat: "", city: "", sort: "new", adId: null };
-    const catOf = id => CATS.find(c => c.id === id) || { name: "", e: "📦", color: "#eee" };
-    const money = n => n ? n.toLocaleString("ru-RU") + " ₽" : "Цена договорная";
+    <section class="lobby-content">
+      <div class="hero-copy">
+        <div class="season-tag"><span class="tag-line"></span> СЕЗОН 01 <span class="tag-dot">◆</span> ПРЕДСЕЗОН</div>
+        <h1>ТВОЯ ЛЕГЕНДА<br>НАЧИНАЕТСЯ<br><span>ЗДЕСЬ</span></h1>
+        <p class="lead">Собери команду. Освой силу стихий.<br>Сломи вражеское ядро и измени ход битвы.</p>
 
-    function go(p) { S = { ...S, ...p }; render(); window.scrollTo(0, 0); }
+        <button id="hero-info" class="selected-hero" type="button" aria-label="Выбрать героя и облик">
+          <span id="hero-emblem" class="hero-emblem">Э</span>
+          <span class="hero-name"><small id="hero-role">МАГ · СРЕДНЯЯ</small><strong id="hero-selected-name">ЭЛАРИС</strong><span id="hero-selected-title">Хранительница рассвета · Рассветная стража</span></span>
+          <span class="hero-info" aria-hidden="true">↗</span>
+        </button>
 
-    function header() {
-      return `<header class="topbar"><div class="inner">
-        <div class="logo" data-go="home">Базар</div>
-        <form class="search" id="sf"><input name="q" placeholder="Поиск по объявлениям" value="${S.q}" /><button>Найти</button></form>
-        <button class="ghost" data-go="favs">♡ Избранное</button>
-        <button class="cta" data-go="post">+ Разместить</button>
-      </div></header>`;
-    }
+        <button id="play-btn" class="play-button"><span class="play-icon">▶</span><span><b>В БОЙ</b><small>ТРЕНИРОВКА ПРОТИВ ИИ</small></span><span class="play-arrow">→</span></button>
+        <div class="queue-note"><span class="queue-icon">✦</span><span><b>СОЛО · ТРЕНИРОВКА</b><small>БОЙ ПРОТИВ ИИ · ОДНА ЛИНИЯ</small></span><span class="queue-ready"><i></i> ГОТОВО</span></div>
+      </div>
 
-    function card(a) {
-      const c = catOf(a.cat);
-      return `<article class="card" data-ad="${a.id}">
-        <div class="thumb" style="background:${c.color}">
-          ${c.e}
-          <span class="badge">${c.name}</span>
-          <button class="fav" data-fav="${a.id}">${store.favs.includes(a.id) ? "♥" : "♡"}</button>
+      <div class="hero-showcase" aria-hidden="true">
+        <div class="showcase-orbit orbit-a"></div><div class="showcase-orbit orbit-b"></div>
+        <div class="hero-light"></div>
+        <div class="showcase-name"><span id="showcase-count">01 / 03</span><b id="showcase-name">ЭЛАРИС</b><small id="showcase-tagline">ХРАНИТЕЛЬНИЦА РАССВЕТА</small></div>
+        <div class="showcase-stats"><span><i>✦</i> СЛОЖНОСТЬ <b id="showcase-difficulty">СРЕДНЯЯ</b></span><span><i>⚔</i> РОЛЬ <b id="showcase-role">МАГ</b></span></div>
+      </div>
+    </section>
+
+    <footer class="lobby-footer">
+      <button id="mode-card" class="mode-card" type="button"><span class="mode-symbol">⌘</span><span><b>ПРАКТИЧЕСКАЯ АРЕНА</b><small>Изучи способности в настоящем матче против ИИ</small></span><span class="mode-chevron">›</span></button>
+      <div class="lobby-tip"><span class="tip-mark">✦</span><span><b>СОВЕТ СТРАННИКА</b><small>Зачисти волну: союзные бойцы помогут продвинуться к вражеской башне.</small></span></div>
+      <div class="build-label"><span class="version-label">ВЕРСИЯ 0.2.0 · ТРЕНИРОВКА + ГЕРОИ + ПРОФИЛЬ</span><a class="apk-download" href="/download/RiftArena-0.2.0.apk" download>СКАЧАТЬ APK ↗</a></div>
+    </footer>
+  </main>
+
+  <section id="game-hud" class="hud" aria-label="Интерфейс матча">
+    <div class="hud-top">
+      <div class="player-panel glass-panel">
+        <div class="player-portrait"><span id="hero-portrait-letter">Э</span><i id="level-badge" class="level-badge">1</i></div>
+        <div class="player-vitals">
+          <div class="player-line"><b id="hero-name-hud">ЭЛАРИС</b><small id="hero-role-hud">МАГ</small><span id="gold-value">245 <i>✦</i></span></div>
+          <div class="bar hp"><i id="hero-hp-bar"></i></div>
+          <div class="bar mana"><i id="hero-mana-bar"></i></div>
+          <div class="bar xp"><i id="hero-xp-bar"></i></div>
         </div>
-        <div class="body">
-          <div class="price">${money(a.price)}</div>
-          <div class="title">${a.title}</div>
-          <div class="meta"><span>${a.city}</span><span>${a.date}</span></div>
+      </div>
+      <div class="match-panel glass-panel">
+        <div class="match-team blue-team"><i></i><b id="blue-score">0</b></div>
+        <div class="match-clock"><b id="match-time">00:00</b><small>ТРЕНИРОВКА</small></div>
+        <div class="match-team red-team"><b id="red-score">0</b><i></i></div>
+      </div>
+      <div class="hud-right">
+        <div class="objective-tag"><span class="objective-icon">✦</span><span><small>ЦЕЛЬ МАТЧА</small><b>РАЗРУШЬТЕ ЯДРО</b></span></div>
+        <div id="minimap" class="minimap glass-panel" aria-label="Мини-карта">
+          <svg viewBox="0 0 110 110" aria-hidden="true"><path d="M15 16 95 95" class="map-lane"/><path d="M32 16 95 79" class="map-river"/><path d="M13 21 18 15 24 15M87 95 95 89 95 82" class="map-edge"/></svg>
+          <span class="map-base blue-base"></span><span class="map-base red-base"></span>
+          <span id="player-dot" class="map-dot player-dot"></span><span id="enemy-dot" class="map-dot enemy-dot"></span>
+          <span id="minimap-wave" class="map-dot wave-dot"></span><span id="neutral-dot" class="map-dot neutral-dot" aria-label="Нейтральный кристалл"></span>
         </div>
-      </article>`;
-    }
+        <button id="pause-btn" class="pause-button" aria-label="Пауза">Ⅱ</button>
+      </div>
+    </div>
 
-    function home() {
-      let ads = store.ads().filter(a => {
-        const q = S.q.toLowerCase();
-        return (!q || a.title.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q))
-          && (!S.cat || a.cat === S.cat) && (!S.city || a.city === S.city);
-      });
-      if (S.sort === "cheap") ads.sort((a,b) => a.price - b.price);
-      if (S.sort === "exp") ads.sort((a,b) => b.price - a.price);
-      const name = catOf(S.cat).name;
-      return `${header()}<main class="wrap">
-        ${!S.q && !S.cat ? `<section class="hero"><h1>Бесплатные объявления рядом с вами</h1>
-          <p>Как Авито, без комиссии: покупайте, продавайте и находите работу.</p>
-          <div class="stats"><div><b>${store.ads().length}+</b><span>объявлений</span></div>
-          <div><b>0 ₽</b><span>за размещение</span></div><div><b>8</b><span>категорий</span></div></div></section>` : ""}
-        <div class="cats">${CATS.map(c => `<div class="cat" data-cat="${c.id}"><div class="e">${c.e}</div><div class="n">${c.name}</div></div>`).join("")}</div>
-        <div class="toolbar"><h2>${name || (S.q ? "Поиск: «" + S.q + "»" : "Свежие объявления")}</h2>
-          <div class="filters">
-            <select id="city"><option value="">Все города</option>${CITIES.map(c => `<option ${S.city===c?"selected":""}>${c}</option>`).join("")}</select>
-            <select id="sort">
-              <option value="new" ${S.sort==="new"?"selected":""}>Сначала новые</option>
-              <option value="cheap" ${S.sort==="cheap"?"selected":""}>Дешевле</option>
-              <option value="exp" ${S.sort==="exp"?"selected":""}>Дороже</option>
-            </select>
-          </div>
-        </div>
-        ${ads.length ? `<div class="grid">${ads.map(card).join("")}</div>` : `<div class="empty">Ничего не найдено</div>`}
-      </main><footer>Базар — бесплатная доска объявлений</footer>`;
-    }
+    <div class="combat-feed" id="combat-feed" aria-live="polite"></div>
+    <div id="jungle-buff" class="buff-pill" hidden><span>✦</span> КРИСТАЛЛ · УСИЛЕНИЕ АТАКИ</div>
+    <div class="objective-toast" id="objective-toast"><span>✦</span> УНИЧТОЖЬ ВРАЖЕСКОЕ ЯДРО</div>
+    <div class="respawn-banner" id="respawn-banner" hidden>ВОЗРОЖДЕНИЕ ЧЕРЕЗ <b>5</b></div>
 
-    function detail() {
-      const a = store.ads().find(x => x.id === S.adId);
-      if (!a) return home();
-      const c = catOf(a.cat);
-      return `${header()}<main class="wrap">
-        <button class="back" data-go="home">← Назад</button>
-        <div class="detail">
-          <div class="gallery" style="background:${c.color}">${c.e}</div>
-          <aside class="side">
-            <div class="price">${money(a.price)}</div>
-            <h2 style="margin:8px 0 12px">${a.title}</h2>
-            <div class="muted">${a.city} · ${a.date}</div>
-            <div class="seller"><div class="avatar">${a.seller[0]}</div><div><b>${a.seller}</b><div class="muted">Частное лицо</div></div></div>
-            <div class="phone">${a.phone}</div>
-            <button class="cta" style="width:100%" data-fav="${a.id}">${store.favs.includes(a.id) ? "В избранном" : "В избранное"}</button>
-          </aside>
-        </div>
-        <div class="desc" style="margin-top:16px"><h3>Описание</h3><p style="margin-top:10px;line-height:1.6">${a.desc}</p></div>
-      </main>`;
-    }
+    <div class="joystick-wrap" aria-label="Виртуальный джойстик">
+      <div id="joystick" class="joystick"><div id="joystick-knob" class="joystick-knob"><span></span></div></div>
+      <span class="control-hint">ПЕРЕМЕЩЕНИЕ</span>
+    </div>
 
-    function favs() {
-      const ads = store.ads().filter(a => store.favs.includes(a.id));
-      return `${header()}<main class="wrap"><h2>Избранное</h2>
-        ${ads.length ? `<div class="grid" style="margin-top:16px">${ads.map(card).join("")}</div>` : `<div class="empty">Пока пусто. Нажмите ♡ на карточке.</div>`}
-      </main>`;
-    }
+    <div class="action-cluster" aria-label="Боевые действия">
+      <button class="skill-button skill-q" data-ability="q" aria-label="Способность Q: Рассветный осколок"><span class="skill-glyph">✦</span><small>Q</small><span class="cooldown-ring"></span><span class="cooldown-text"></span></button>
+      <button class="skill-button skill-w" data-ability="w" aria-label="Способность W: Скачок"><span class="skill-glyph">➤</span><small>W</small><span class="cooldown-ring"></span><span class="cooldown-text"></span></button>
+      <button class="skill-button skill-e" data-ability="e" aria-label="Способность E: Солнечная сфера"><span class="skill-glyph">◉</span><small>E</small><span class="cooldown-ring"></span><span class="cooldown-text"></span></button>
+      <button class="skill-button skill-r" data-ability="r" aria-label="Ультимативная способность R: Сияние"><span class="skill-glyph">✺</span><small>R</small><span class="cooldown-ring"></span><span class="cooldown-text"></span></button>
+      <button id="potion-btn" class="potion-button" aria-label="Зелье лечения"><span>♜</span><small>1</small></button>
+      <button id="attack-btn" class="attack-button" aria-label="Обычная атака"><span class="attack-glyph">⚔</span><b>АТАКА</b><small>SPACE</small></button>
+    </div>
+    <div class="controls-note"><kbd>КЛИК / ← ↑ ↓ →</kbd> ДВИЖЕНИЕ <span>·</span> <kbd>SPACE</kbd> АТАКА <span>·</span> <kbd>Q W E R</kbd> УМЕНИЯ</div>
+  </section>
 
-    function post() {
-      return `${header()}<main class="wrap"><form class="form" id="pf">
-        <h2>Новое объявление — бесплатно</h2>
-        <p class="muted">Сохранится в этом браузере.</p>
-        <label>Заголовок</label><input name="title" required maxlength="80" />
-        <div class="row2"><div><label>Категория</label><select name="cat">${CATS.map(c=>`<option value="${c.id}">${c.name}</option>`).join("")}</select></div>
-        <div><label>Город</label><select name="city">${CITIES.map(c=>`<option>${c}</option>`).join("")}</select></div></div>
-        <div class="row2"><div><label>Цена, ₽ (0 = договорная)</label><input name="price" type="number" min="0" value="0" /></div>
-        <div><label>Телефон</label><input name="phone" required placeholder="+7 900 000-00-00" /></div></div>
-        <label>Ваше имя</label><input name="seller" required />
-        <label>Описание</label><textarea name="desc" required></textarea>
-        <button class="cta" style="margin-top:16px;width:100%">Опубликовать</button>
-      </form></main>`;
-    }
+  <div id="pause-overlay" class="modal-overlay" hidden>
+    <div class="modal-card pause-card">
+      <div class="modal-kicker">ПЕРЕДЫШКА В БОЮ</div><h2>ПАУЗА</h2><p>Сражение никуда не убежит.</p>
+      <button id="resume-btn" class="modal-primary">ПРОДОЛЖИТЬ <span>→</span></button>
+      <button id="leave-btn" class="modal-secondary">ВЕРНУТЬСЯ В МЕНЮ</button>
+    </div>
+  </div>
+  <div id="result-overlay" class="modal-overlay" hidden>
+    <div class="modal-card result-card"><div id="result-kicker" class="modal-kicker">РЕЗУЛЬТАТ МАТЧА</div><h2 id="result-title">ПОБЕДА</h2><p id="result-copy">Вражеское ядро разрушено.</p><div class="result-stats"><span><b id="result-kda">0 / 0 / 0</b><small>K / D / A</small></span><span><b id="result-gold">0</b><small>ЗОЛОТА</small></span><span><b id="result-time">00:00</b><small>ВРЕМЯ</small></span></div><button id="replay-btn" class="modal-primary">СЫГРАТЬ ЕЩЁ <span>→</span></button><button id="menu-btn" class="modal-secondary">В ГЛАВНОЕ МЕНЮ</button></div>
+  </div>
 
-    function render() {
-      const app = document.getElementById("app");
-      app.innerHTML = S.view === "detail" ? detail() : S.view === "favs" ? favs() : S.view === "post" ? post() : home();
-      app.querySelectorAll("[data-go]").forEach(el => el.onclick = e => { e.preventDefault(); go({ view: el.dataset.go, adId: null }); });
-      const sf = document.getElementById("sf");
-      if (sf) sf.onsubmit = e => { e.preventDefault(); go({ view: "home", q: sf.q.value.trim() }); };
-      app.querySelectorAll("[data-cat]").forEach(el => el.onclick = () => go({ view: "home", cat: el.dataset.cat }));
-      app.querySelectorAll("[data-ad]").forEach(el => el.onclick = e => { if (e.target.closest("[data-fav]")) return; go({ view: "detail", adId: el.dataset.ad }); });
-      app.querySelectorAll("[data-fav]").forEach(el => el.onclick = e => { e.stopPropagation(); store.toggle(el.dataset.fav); render(); });
-      const city = document.getElementById("city"); if (city) city.onchange = () => go({ city: city.value });
-      const sort = document.getElementById("sort"); if (sort) sort.onchange = () => go({ sort: sort.value });
-      const pf = document.getElementById("pf");
-      if (pf) pf.onsubmit = e => {
-        e.preventDefault();
-        const f = Object.fromEntries(new FormData(pf));
-        store.add({ id: String(Date.now()), title: f.title, price: Number(f.price)||0, cat: f.cat, city: f.city, desc: f.desc, seller: f.seller, phone: f.phone, date: "Сегодня" });
-        go({ view: "home", cat: "", q: "" });
-      };
-    }
-    render();
-  </script>
+  <div id="loading-overlay" class="loading-overlay" hidden aria-live="polite" aria-label="Подготовка матча">
+    <div class="loading-card">
+      <div class="loading-sigil"><span></span></div>
+      <div class="loading-kicker">РАЗЛОМ ПРОБУЖДАЕТСЯ</div>
+      <h2>ПОДГОТОВКА АРЕНЫ</h2>
+      <p id="loading-status">Собираем поле боя…</p>
+      <div class="loading-track"><i id="loading-progress"></i></div>
+      <div class="loading-percent"><span>СУМЕРЕЧНЫЙ ХРЕБЕТ</span><b id="loading-percent">0%</b></div>
+      <div class="loading-tip">Совет: сначала осмотри карту и выбери цель — вход под башню без волны опасен.</div>
+    </div>
+  </div>
+
+  <div id="heroes-overlay" class="modal-overlay meta-overlay" hidden>
+    <section class="meta-panel heroes-panel" role="dialog" aria-modal="true" aria-labelledby="heroes-title">
+      <button class="overlay-close" type="button" data-overlay-close="heroes-overlay" aria-label="Закрыть">×</button>
+      <div class="modal-kicker">ПАНТЕОН РАЗЛОМА · ОРИГИНАЛЬНЫЕ ГЕРОИ</div>
+      <h2 id="heroes-title">ВЫБОР ГЕРОЯ</h2>
+      <p id="hero-detail-copy" class="meta-lead">Выбери стиль боя. Силы героев различаются и настраиваются отдельно.</p>
+      <div id="hero-statline" class="hero-statline"></div>
+      <div id="hero-ability-list" class="hero-ability-list"></div>
+      <div id="hero-select-grid" class="hero-select-grid"></div>
+      <div class="skin-heading"><span>ОБЛИКИ ГЕРОЯ</span><small>косметические варианты</small></div>
+      <div id="skin-select-grid" class="skin-select-grid"></div>
+      <div class="panel-footnote">Персонажи и облики созданы для «Сумеречного разлома» и не копируют героев других игр.</div>
+    </section>
+  </div>
+
+  <div id="account-overlay" class="modal-overlay meta-overlay" hidden>
+    <section class="meta-panel account-panel" role="dialog" aria-modal="true" aria-labelledby="account-title">
+      <button class="overlay-close" type="button" data-overlay-close="account-overlay" aria-label="Закрыть">×</button>
+      <div class="modal-kicker">ПРОФИЛЬ СТРАННИКА</div>
+      <h2 id="account-title">ЛИЧНЫЙ КАБИНЕТ</h2>
+      <div id="account-summary" class="account-summary">ГОСТЕВОЙ ПРОФИЛЬ · ПРОГРЕСС НА ЭТОМ УСТРОЙСТВЕ</div>
+      <div id="online-auth" class="auth-box">
+        <form id="auth-form" autocomplete="on">
+          <label class="form-field"><span>ИМЯ ИГРОКА</span><input name="username" type="text" minlength="3" maxlength="20" autocomplete="username" required placeholder="Например, Strannik" /></label>
+          <label class="form-field"><span>ПАРОЛЬ</span><input name="password" type="password" minlength="8" maxlength="128" autocomplete="current-password" required placeholder="Не короче 8 символов" /></label>
+          <label id="auth-confirm-row" class="form-field" hidden><span>ПОВТОРИТЕ ПАРОЛЬ</span><input name="confirm" type="password" minlength="8" maxlength="128" autocomplete="new-password" /></label>
+          <button id="auth-submit" class="modal-primary" type="submit">ВОЙТИ</button>
+        </form>
+        <button id="auth-toggle" class="text-button" type="button">Создать новый аккаунт</button>
+        <div id="auth-message" class="auth-message" aria-live="polite">Войдите, чтобы синхронизировать статистику.</div>
+        <p class="panel-footnote">Для прототипа: аккаунт хранит имя, пароль в виде хеша и игровые результаты. Восстановление пароля и подтверждение почты пока не подключены.</p>
+      </div>
+      <div class="stats-grid">
+        <div><b id="profile-matches">0</b><small>МАТЧИ</small></div>
+        <div><b id="profile-wins">0</b><small>ПОБЕДЫ</small></div>
+        <div><b id="profile-winrate">0%</b><small>ПОБЕДЫ %</small></div>
+        <div><b id="profile-kda">0 / 0 / 0</b><small>K / D / A</small></div>
+      </div>
+      <div class="medals-heading"><span>МЕДАЛИ</span><small>прогресс профиля</small></div>
+      <div id="account-medals" class="medal-grid"></div>
+      <button id="online-logout" class="modal-secondary" type="button" hidden>ВЫЙТИ ИЗ АККАУНТА</button>
+    </section>
+  </div>
+
+  <div id="settings-overlay" class="modal-overlay meta-overlay" hidden>
+    <section class="meta-panel settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <button class="overlay-close" type="button" data-overlay-close="settings-overlay" aria-label="Закрыть">×</button>
+      <div class="modal-kicker">НАСТРОЙ ИГРУ ПОД СЕБЯ</div>
+      <h2 id="settings-title">НАСТРОЙКИ</h2>
+      <label class="form-field"><span>КАЧЕСТВО ГРАФИКИ</span><select id="graphics-quality"><option value="auto">Авто</option><option value="low">Экономное</option><option value="medium">Сбалансированное</option><option value="high">Высокое</option></select></label>
+      <label class="range-field"><span>МУЗЫКА <b id="music-value">22%</b></span><input id="music-volume" type="range" min="0" max="100" value="22" /></label>
+      <label class="range-field"><span>ЭФФЕКТЫ И ГОЛОС <b id="effects-value">65%</b></span><input id="effects-volume" type="range" min="0" max="100" value="65" /></label>
+      <label class="check-field"><input id="voice-enabled" type="checkbox" checked /><span>Голосовые реплики выбранного героя</span></label>
+      <div class="form-field api-field"><span>HTTPS-АДРЕС СЕРВЕРА ПРОФИЛЯ</span><input id="api-base" type="url" inputmode="url" autocomplete="url" placeholder="В веб-предпросмотре подключается автоматически" /><small>В APK онлайн-вход заработает после размещения API на постоянном HTTPS-сервере.</small></div>
+      <div id="api-status" class="api-status" aria-live="polite">Сервер профиля не проверен.</div>
+      <button id="api-test" class="modal-secondary" type="button">ПРОВЕРИТЬ СЕРВЕР</button>
+    </section>
+  </div>
+
+  <div class="rotate-tip" id="rotate-tip"><span>↻</span><b>Поверни устройство</b><small>Арена рассчитана на горизонтальный экран</small></div>
+
+  <script src="vendor/three.min.js"></script>
+  <script src="meta.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

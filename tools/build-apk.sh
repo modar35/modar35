@@ -11,22 +11,18 @@
 #   tools/build-apk.sh            # debug-подпись, ключ из отладочного keystore
 #   RELEASE=1 tools/build-apk.sh  # подпись своим ключом (KEYSTORE/PASS/ALIAS)
 #
-# Необязательное предзаполнение настроек при сборке (приложение подставит их
-# при первом запуске, пока пользователь не изменил значения вручную):
-#   API_KEY=sk-... tools/build-apk.sh     # вшить ключ (не публиковать такой APK!)
-#   BASE_URL=http://192.168.1.50:11434/v1 tools/build-apk.sh
-#   MODEL=qwen2.5 tools/build-apk.sh
-#
+# Веб-игра и локальный Three.js автоматически включаются в APK assets.
+
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 TOOLCHAIN_DIR="${TOOLCHAIN_DIR:-$HOME/.cache/tc}"
 BIN="$TOOLCHAIN_DIR/bin"
 
-APP_NAME="ModarAI"
-PKG="com.modar.ai"
-VERSION_CODE="${VERSION_CODE:-1}"
-VERSION_NAME="${VERSION_NAME:-1.0}"
+APP_NAME="RiftArena"
+PKG="com.modar.riftarena"
+VERSION_CODE="${VERSION_CODE:-2}"
+VERSION_NAME="${VERSION_NAME:-0.2.0}"
 MIN_SDK="${MIN_SDK:-24}"
 TARGET_SDK="${TARGET_SDK:-34}"
 
@@ -58,21 +54,12 @@ sed "s|<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\">|<
 grep -q "package=\"$PKG\"" "$BUILD/manifest/AndroidManifest.xml" || {
   echo "Не удалось подставить package в манифест" >&2; exit 1; }
 
-echo "==> 1b/6 Предзаполнение настроек (необязательно)"
+echo "==> 1b/6 Копирование игры в assets"
 ASSETS_DIR="$BUILD/assets"
-mkdir -p "$ASSETS_DIR"
-if [ -n "${API_KEY:-}" ]; then
-  printf '%s' "$API_KEY" > "$ASSETS_DIR/api_key.txt"
-  echo "    ! API_KEY вшит в APK — такой файл нельзя публиковать: ключ извлекается из сборки."
-fi
-if [ -n "${BASE_URL:-}" ]; then
-  printf '%s' "$BASE_URL" > "$ASSETS_DIR/base_url.txt"
-  echo "    base_url: $BASE_URL"
-fi
-if [ -n "${MODEL:-}" ]; then
-  printf '%s' "$MODEL" > "$ASSETS_DIR/model.txt"
-  echo "    model: $MODEL"
-fi
+mkdir -p "$ASSETS_DIR/vendor"
+cp "$ROOT/web/index.html" "$ROOT/web/styles.css" "$ROOT/web/meta.js" "$ROOT/web/app.js" "$ASSETS_DIR/"
+cp "$ROOT/web/vendor/three.min.js" "$ROOT/web/vendor/THREE-LICENSE.txt" "$ASSETS_DIR/vendor/"
+echo "    Локальный HTML/CSS/JS и Three.js включены в APK; подключение к сети не требуется."
 
 echo "==> 2/6 aapt2 compile (ресурсы)"
 find "$RES_DIR" -type f | sort > "$BUILD/res-files.txt"

@@ -6,6 +6,8 @@ local.properties
 *.aab
 *.dex
 *.class
+__pycache__/
+runtime/
 
 # IDE
 .idea/

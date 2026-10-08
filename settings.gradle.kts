@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ModarAI"
+rootProject.name = "RiftArena"
 include(":app")

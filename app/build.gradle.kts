@@ -3,15 +3,22 @@ plugins {
 }
 
 android {
-    namespace = "com.modar.ai"
+    namespace = "com.modar.riftarena"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.modar.ai"
+        applicationId = "com.modar.riftarena"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "0.2.0"
+    }
+
+    sourceSets {
+        getByName("main") {
+            // Один и тот же локальный game bundle используется в web preview и APK.
+            assets.srcDir("../web")
+        }
     }
 
     buildTypes {

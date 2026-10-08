@@ -4,14 +4,15 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- пузырь диалога со искрой ИИ -->
     <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M34,32h40a12,12 0 0 1 12,12v20a12,12 0 0 1 -12,12H56l-14,12v-12h-8a12,12 0 0 1 -12,-12V44a12,12 0 0 1 12,-12z" />
+        android:fillColor="#FF101C19"
+        android:strokeColor="#FFE1C17C"
+        android:strokeWidth="2.2"
+        android:pathData="M54,12 L84,29 L84,67 L54,90 L24,67 L24,29 Z" />
     <path
-        android:fillColor="#FF2563EB"
-        android:pathData="M54,40l3.6,8.4L66,52l-8.4,3.6L54,64l-3.6,-8.4L42,52l8.4,-3.6z" />
+        android:fillColor="#FFDCC080"
+        android:pathData="M62,22 L39,52 L53,52 L46,80 L70,45 L56,45 Z" />
     <path
-        android:fillColor="#FF2563EB"
-        android:pathData="M68,56l1.8,4.2L74,62l-4.2,1.8L68,68l-1.8,-4.2L62,62l4.2,-1.8z" />
+        android:fillColor="#FF75D8D2"
+        android:pathData="M26,82 L41,73 L37,84 L25,89 Z" />
 </vector>
