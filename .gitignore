@@ -32,3 +32,13 @@ parental/tools/cache/
 
 # Готовый APK Modar Family (исключение из *.apk)
 !parental/apk/*.apk
+
+# Modar SAMP (лаунчер SA-MP): данные сервера лаунчера
+samp-launcher/server/data/
+samp-launcher/server/node_modules/
+
+# Готовый APK лаунчера (исключение из *.apk)
+!samp-launcher/apk/*.apk
+
+# Побочные файлы apksigner (v4-подпись)
+*.idsig

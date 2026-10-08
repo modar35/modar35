@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="4dp"
+        android:paddingTop="6dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="6dp">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            style="@style/IconButton"
+            android:contentDescription="Назад"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:paddingLeft="8dp"
+            android:text="@string/settings_title"
+            android:textColor="@color/text"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarStyle="outsideOverlay">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="26dp">
+
+            <TextView
+                style="@style/SectionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Сервер лаунчера" />
+
+            <TextView
+                style="@style/FieldLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Оттуда приходят список серверов, мод-паки, новости и обновления" />
+
+            <EditText
+                android:id="@+id/set_api"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="http://192.168.1.10:8090"
+                android:inputType="textUri"
+                android:maxLines="1" />
+
+            <Button
+                android:id="@+id/btn_check_api"
+                style="@style/SecondaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/check_api" />
+
+            <TextView
+                android:id="@+id/set_api_status"
+                style="@style/Muted"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="6dp" />
+
+            <TextView
+                style="@style/SectionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Клиент SA-MP" />
+
+            <Button
+                android:id="@+id/btn_pick_client"
+                style="@style/PrimaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pick_client" />
+
+            <TextView
+                android:id="@+id/set_client_label"
+                style="@style/Muted"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="6dp" />
+
+            <TextView
+                style="@style/FieldLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Имя пакета клиента" />
+
+            <EditText
+                android:id="@+id/set_client"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="com.gta.game"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <TextView
+                style="@style/FieldLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Активити клиента (если нужна не главная)" />
+
+            <EditText
+                android:id="@+id/set_activity"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="com.gta.launcher.activity.MainActivity"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <TextView
+                style="@style/FieldLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ник в игре" />
+
+            <EditText
+                android:id="@+id/set_nickname"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Modar777"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <TextView
+                style="@style/FieldLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Пароль сервера по умолчанию" />
+
+            <EditText
+                android:id="@+id/set_server_password"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="пусто — если серверы без пароля"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <TextView
+                style="@style/SectionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Как передаём адрес клиенту" />
+
+            <TextView
+                style="@style/FieldLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ключи extras: адрес, порт, ник, пароль" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/set_extra_ip"
+                    style="@style/Field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="6dp"
+                    android:hint="ip"
+                    android:inputType="text"
+                    android:maxLines="1" />
+
+                <EditText
+                    android:id="@+id/set_extra_port"
+                    style="@style/Field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="6dp"
+                    android:hint="port"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/set_extra_nick"
+                    style="@style/Field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="6dp"
+                    android:hint="nickname"
+                    android:inputType="text"
+                    android:maxLines="1" />
+
+                <EditText
+                    android:id="@+id/set_extra_pass"
+                    style="@style/Field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="password"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/set_send_args"
+                style="@style/CheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Класть строку аргументов «-h адрес -p порт -n ник»" />
+
+            <CheckBox
+                android:id="@+id/set_copy_clipboard"
+                style="@style/CheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Копировать адрес в буфер обмена при запуске" />
+
+            <TextView
+                style="@style/SectionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Игра и моды" />
+
+            <TextView
+                style="@style/FieldLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Каталог игры" />
+
+            <EditText
+                android:id="@+id/set_game_dir"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="/storage/emulated/0/GTA"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <TextView
+                style="@style/FieldLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Каталог лаунчера (журнал модов и резервные копии)" />
+
+            <EditText
+                android:id="@+id/set_data_dir"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="/storage/emulated/0/ModarLauncher"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <CheckBox
+                android:id="@+id/set_backup_mods"
+                style="@style/CheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Сохранять резервные копии заменяемых файлов" />
+
+            <TextView
+                android:id="@+id/set_storage_status"
+                style="@style/Muted"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="6dp" />
+
+            <Button
+                android:id="@+id/btn_storage"
+                style="@style/SecondaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/allow_storage" />
+
+            <TextView
+                style="@style/SectionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Список серверов" />
+
+            <TextView
+                style="@style/FieldLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Таймаут опроса, мс (400–10000)" />
+
+            <EditText
+                android:id="@+id/set_timeout"
+                style="@style/Field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="1500"
+                android:inputType="number"
+                android:maxLines="1" />
+
+            <CheckBox
+                android:id="@+id/set_auto_refresh"
+                style="@style/CheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Обновлять статус серверов при открытии" />
+
+            <Button
+                android:id="@+id/btn_save"
+                style="@style/PrimaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save" />
+
+            <Button
+                android:id="@+id/btn_help"
+                style="@style/SecondaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/help" />
+
+            <Button
+                android:id="@+id/btn_about"
+                style="@style/SecondaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/surface"
+            android:elevation="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="14dp"
+            android:paddingTop="6dp"
+            android:paddingRight="4dp"
+            android:paddingBottom="6dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/servers_title"
+                android:textColor="@color/text"
+                android:textSize="20sp" />
+
+            <ImageButton
+                android:id="@+id/btn_mods"
+                style="@style/IconButton"
+                android:contentDescription="@string/mods_title"
+                android:src="@drawable/ic_mods" />
+
+            <ImageButton
+                android:id="@+id/btn_news"
+                style="@style/IconButton"
+                android:contentDescription="@string/news_title"
+                android:src="@drawable/ic_news" />
+
+            <ImageButton
+                android:id="@+id/btn_refresh"
+                style="@style/IconButton"
+                android:contentDescription="Обновить"
+                android:src="@drawable/ic_refresh" />
+
+            <ImageButton
+                android:id="@+id/btn_settings"
+                style="@style/IconButton"
+                android:contentDescription="@string/settings_title"
+                android:src="@drawable/ic_settings" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/main_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/banner_bg"
+            android:orientation="horizontal"
+            android:paddingLeft="12dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/banner_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/accent"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-medium" />
+
+                <TextView
+                    android:id="@+id/banner_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="3"
+                    android:textColor="@color/text_muted"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/banner_close"
+                style="@style/IconButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:contentDescription="Скрыть"
+                android:src="@drawable/ic_close" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/main_search"
+            style="@style/Field"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:hint="@string/search_hint"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="12dp"
+            android:paddingTop="4dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/chip_all"
+                style="@style/Chip"
+                android:text="Все" />
+
+            <TextView
+                android:id="@+id/chip_favorite"
+                style="@style/Chip"
+                android:text="★" />
+
+            <TextView
+                android:id="@+id/chip_online"
+                style="@style/Chip"
+                android:text="Онлайн" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ListView
+                android:id="@+id/servers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/divider"
+                android:dividerHeight="1dp"
+                android:paddingBottom="10dp"
+                android:scrollbarStyle="outsideOverlay" />
+
+            <TextView
+                android:id="@+id/servers_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="28dp"
+                android:textColor="@color/text_muted"
+                android:textSize="15sp" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/main_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/surface"
+            android:paddingLeft="14dp"
+            android:paddingTop="8dp"
+            android:paddingRight="14dp"
+            android:paddingBottom="8dp"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="18dp"
+        android:layout_marginBottom="52dp"
+        android:background="@drawable/btn_circle"
+        android:contentDescription="@string/add_server"
+        android:elevation="6dp"
+        android:paddingLeft="14dp"
+        android:text="+"
+        android:textColor="@color/white"
+        android:textSize="26sp" />
+</FrameLayout>

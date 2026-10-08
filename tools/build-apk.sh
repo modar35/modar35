@@ -17,18 +17,26 @@
 #   BASE_URL=http://192.168.1.50:11434/v1 tools/build-apk.sh
 #   MODEL=qwen2.5 tools/build-apk.sh
 #
+# Какое приложение собирать (по умолчанию — корневой модуль app/):
+#   APP_DIR=samp-launcher/app APP_NAME=ModarSAMP PKG=com.modar.samp \
+#   OUT_DIR=samp-launcher/apk tools/build-apk.sh
+#   API_URL=http://192.168.1.10:8090 tools/build-apk.sh   # адрес сервера лаунчера
+#   GAME_DIR=/storage/emulated/0/GTA tools/build-apk.sh   # каталог игры SA-MP
+#
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 TOOLCHAIN_DIR="${TOOLCHAIN_DIR:-$HOME/.cache/tc}"
 BIN="$TOOLCHAIN_DIR/bin"
 
-APP_NAME="ModarAI"
-PKG="com.modar.ai"
+APP_DIR="${APP_DIR:-app}"
+APP_NAME="${APP_NAME:-ModarAI}"
+PKG="${PKG:-com.modar.ai}"
 VERSION_CODE="${VERSION_CODE:-1}"
 VERSION_NAME="${VERSION_NAME:-1.0}"
 MIN_SDK="${MIN_SDK:-24}"
 TARGET_SDK="${TARGET_SDK:-34}"
+OUT_DIR="${OUT_DIR:-$ROOT/dist}"
 
 JAVA_HOME_DIR="${JAVA_HOME_DIR:-$TOOLCHAIN_DIR/jdkpy/jdk4py/java-runtime}"
 JAVA="$JAVA_HOME_DIR/bin/java"
@@ -43,18 +51,32 @@ for f in "$JAVA" "$AAPT2" "$ANDROID_JAR" "$D8_JAR" "$ECJ_JAR" "$APKSIGNER_JAR"; 
 done
 
 BUILD="$ROOT/build"
-OUT="$ROOT/dist"
+OUT="$OUT_DIR"
 rm -rf "$BUILD"
 mkdir -p "$BUILD/gen" "$BUILD/classes" "$BUILD/dex" "$OUT"
 
-MANIFEST="$ROOT/app/src/main/AndroidManifest.xml"
-RES_DIR="$ROOT/app/src/main/res"
-SRC_DIR="$ROOT/app/src/main/java"
+MANIFEST="$ROOT/$APP_DIR/src/main/AndroidManifest.xml"
+RES_DIR="$ROOT/$APP_DIR/src/main/res"
+SRC_DIR="$ROOT/$APP_DIR/src/main/java"
 
-echo "==> 1/6 Подготовка манифеста (package=$PKG)"
+for f in "$MANIFEST" "$RES_DIR" "$SRC_DIR"; do
+  [ -e "$f" ] || { echo "Не найдено: $f (проверьте APP_DIR)" >&2; exit 1; }
+done
+
+echo "==> 1/6 Подготовка манифеста (package=$PKG, модуль=$APP_DIR)"
 mkdir -p "$BUILD/manifest"
-sed "s|<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\">|<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" package=\"$PKG\">|" \
-  "$MANIFEST" > "$BUILD/manifest/AndroidManifest.xml"
+# package подставляем после первого <manifest …>, сохраняя остальные атрибуты
+# (xmlns:tools и т.п.), если package ещё не задан.
+python3 - "$MANIFEST" "$BUILD/manifest/AndroidManifest.xml" "$PKG" <<'PY'
+import sys, re
+src, dst, pkg = sys.argv[1], sys.argv[2], sys.argv[3]
+text = open(src, encoding='utf-8').read()
+if re.search(r'<manifest[^>]*\spackage=', text):
+    out = text
+else:
+    out = re.sub(r'<manifest\b', '<manifest package="%s"' % pkg, text, count=1)
+open(dst, 'w', encoding='utf-8').write(out)
+PY
 grep -q "package=\"$PKG\"" "$BUILD/manifest/AndroidManifest.xml" || {
   echo "Не удалось подставить package в манифест" >&2; exit 1; }
 
@@ -72,6 +94,14 @@ fi
 if [ -n "${MODEL:-}" ]; then
   printf '%s' "$MODEL" > "$ASSETS_DIR/model.txt"
   echo "    model: $MODEL"
+fi
+if [ -n "${API_URL:-}" ]; then
+  printf '%s' "$API_URL" > "$ASSETS_DIR/api_url.txt"
+  echo "    api_url: $API_URL"
+fi
+if [ -n "${GAME_DIR:-}" ]; then
+  printf '%s' "$GAME_DIR" > "$ASSETS_DIR/game_dir.txt"
+  echo "    game_dir: $GAME_DIR"
 fi
 
 echo "==> 2/6 aapt2 compile (ресурсы)"
