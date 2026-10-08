@@ -4,7 +4,8 @@
 # (UTF-8 и CP1251) и прогоняет по ним опрос из кода приложения (SampQuery.java).
 #
 #   samp-launcher/tools/test-query.sh
-set -euo pipefail
+# set -eu (без pipefail): скрипт запускают и как `sh test-query.sh`, где pipefail недоступен
+set -eu
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 TOOLCHAIN_DIR="${TOOLCHAIN_DIR:-$HOME/.cache/tc}"
