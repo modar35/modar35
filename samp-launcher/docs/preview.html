@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modar SAMP — предпросмотр интерфейса</title>
+<style>
+  :root {
+    --bg: #0e1116; --surface: #151a21; --surface-alt: #1e2530; --accent: #4c8dff;
+    --accent-deep: #1b3358; --text: #e9edf5; --muted: #93a1b5; --divider: #232b38;
+    --ok: #4ed88a; --warn: #ffc46b; --danger: #ff7a7a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: radial-gradient(1200px 600px at 20% -10%, #16203a, #0e1116 60%); color: var(--text);
+         font: 15px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif; padding: 34px 20px 60px; }
+  h1 { font-size: 26px; margin: 0 0 6px; }
+  .lead { color: var(--muted); max-width: 760px; margin: 0 auto 8px; }
+  .wrap { max-width: 1320px; margin: 0 auto; text-align: center; }
+  .phones { display: flex; flex-wrap: wrap; gap: 26px; justify-content: center; margin-top: 28px; }
+  .phone { width: 320px; background: #0b0e13; border: 1px solid var(--divider); border-radius: 30px;
+           padding: 12px; box-shadow: 0 22px 50px rgba(0,0,0,.55); }
+  .screen { background: var(--bg); border-radius: 22px; overflow: hidden; height: 620px; display: flex; flex-direction: column; position: relative; }
+  .caption { color: var(--muted); font-size: 13px; margin-top: 10px; }
+  .toolbar { display: flex; align-items: center; gap: 10px; background: var(--surface); padding: 12px 14px; }
+  .toolbar .title { font-weight: 600; font-size: 17px; flex: 1; }
+  .icon { width: 20px; height: 20px; opacity: .85; }
+  .search { margin: 10px 12px 0; background: var(--surface-alt); border: 1px solid var(--divider);
+            border-radius: 12px; padding: 9px 12px; color: var(--muted); font-size: 13px; }
+  .chips { display: flex; gap: 8px; padding: 10px 12px 6px; }
+  .chip { border-radius: 18px; padding: 6px 13px; font-size: 12.5px; background: var(--surface-alt); border: 1px solid var(--divider); color: var(--text); }
+  .chip.active { background: var(--accent-deep); border-color: var(--accent); }
+  .list { padding: 4px 0 30px; overflow: hidden; }
+  .row { display: flex; gap: 10px; padding: 11px 14px; border-bottom: 1px solid var(--divider); align-items: center; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .grow { flex: 1; min-width: 0; }
+  .name { font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sub { color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .right { text-align: right; font-size: 12.5px; color: var(--muted); flex: none; }
+  .players { color: var(--accent); font-weight: 600; font-size: 14px; }
+  .bar { height: 4px; border-radius: 3px; background: #263042; margin-top: 6px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--accent); }
+  .fab { position: absolute; right: 16px; bottom: 46px; width: 52px; height: 52px; border-radius: 50%;
+         background: var(--accent); color: #fff; font-size: 26px; display: flex; align-items: center; justify-content: center;
+         box-shadow: 0 10px 24px rgba(76,141,255,.35); }
+  .statusbar { background: var(--surface); color: var(--muted); font-size: 11.5px; padding: 7px 14px; }
+  .card { background: var(--surface); border: 1px solid var(--divider); border-radius: 16px; margin: 10px 12px; padding: 13px; }
+  .btn { border-radius: 14px; padding: 11px; text-align: center; font-size: 14px; margin-top: 10px; }
+  .btn.primary { background: var(--accent); color: #fff; font-weight: 500; }
+  .btn.secondary { background: var(--surface-alt); border: 1px solid var(--divider); }
+  .badge { font-size: 11px; padding: 3px 8px; border-radius: 10px; background: rgba(76,141,255,.2); color: var(--accent); }
+  .badge.ok { background: rgba(78,216,138,.18); color: var(--ok); }
+  .badge.warn { background: rgba(255,196,107,.18); color: var(--warn); }
+  .label { color: var(--muted); font-size: 12.5px; margin: 12px 0 4px; }
+  .field { background: var(--surface-alt); border: 1px solid var(--divider); border-radius: 11px; padding: 10px; font-size: 14px; }
+  .section { color: var(--accent); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; margin: 16px 12px 2px; }
+  .note { max-width: 900px; margin: 26px auto 0; background: var(--surface); border: 1px solid var(--divider);
+          border-radius: 16px; padding: 16px 20px; color: var(--muted); text-align: left; }
+  .note b { color: var(--text); }
+  code { background: var(--surface-alt); border-radius: 6px; padding: 1px 6px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Modar SAMP — как выглядит лаунчер</h1>
+  <p class="lead">Макет экранов приложения (снимок вёрстки, а не работающая программа): живые данные подставляются
+  с сервера лаунчера и по протоколу SA-MP Query. Собранный APK — <code>samp-launcher/apk/ModarSAMP-1.0.apk</code>.</p>
+
+  <div class="phones">
+    <!-- 1. Список серверов -->
+    <div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar">Modar SAMP · поиск и опрос по UDP</div>
+          <div class="toolbar">
+            <div class="title">Серверы</div>
+            <svg class="icon" viewBox="0 0 24 24"><path fill="#e9edf5" d="M3,3h8v8H3zM13,3h8v8h-8zM3,13h8v8H3zM13,13h8v8h-8z"/></svg>
+            <svg class="icon" viewBox="0 0 24 24"><path fill="#e9edf5" d="M18,11v2h4v-2h-4zM4,9c-1.1,0-2,.9-2,2v2c0,1.1.9,2,2,2h1v4h2v-4h1l5,3V6L8,9H4z"/></svg>
+            <svg class="icon" viewBox="0 0 24 24"><path fill="#e9edf5" d="M17.65,6.35C16.2,4.9 14.21,4 12,4c-4.42,0-7.99,3.58-8,8s3.58,8 8,8c3.73,0 6.84-2.55 7.73-6h-2.08c-.82,2.33-3.04,4-5.65,4-3.31,0-6-2.69-6-6s2.69-6 6-6c1.66,0 3.14.69 4.22,1.78L13,11h7V4l-2.35,2.35z"/></svg>
+          </div>
+          <div class="search">Поиск: название, адрес, режим</div>
+          <div class="chips">
+            <span class="chip active">Все · 5</span>
+            <span class="chip">★ 2</span>
+            <span class="chip">Онлайн · 3</span>
+          </div>
+          <div class="list">
+            <div class="row">
+              <span class="dot" style="background:var(--ok)"></span>
+              <div class="grow">
+                <div class="name">Aurora RP | Mobile</div>
+                <div class="sub">RolePlay · Russian · мобильный x5</div>
+                <div class="sub">91.211.4.18:7777</div>
+                <div class="bar"><i style="width:41%"></i></div>
+              </div>
+              <div class="right"><div class="players">123/300</div><div>онлайн · 42 мс</div></div>
+            </div>
+            <div class="row">
+              <span class="dot" style="background:var(--ok)"></span>
+              <div class="grow">
+                <div class="name">Русский Мод | Сервер 🔒</div>
+                <div class="sub">Freeroam · Russian</div>
+                <div class="sub">samp.example.com:7777</div>
+                <div class="bar"><i style="width:12%"></i></div>
+              </div>
+              <div class="right"><div class="players">18/150</div><div>онлайн · 87 мс</div></div>
+            </div>
+            <div class="row">
+              <span class="dot" style="background:var(--ok)"></span>
+              <div class="grow">
+                <div class="name">Nativo DM</div>
+                <div class="sub">Deathmatch · English</div>
+                <div class="sub">176.32.9.44:7800</div>
+                <div class="bar"><i style="width:63%"></i></div>
+              </div>
+              <div class="right"><div class="players">63/100</div><div>онлайн · 33 мс</div></div>
+            </div>
+            <div class="row">
+              <span class="dot" style="background:var(--danger)"></span>
+              <div class="grow">
+                <div class="name">Старый сервер</div>
+                <div class="sub">нет данных о режиме</div>
+                <div class="sub">10.0.0.14:7777</div>
+              </div>
+              <div class="right"><div>оффлайн</div><div>нет ответа</div></div>
+            </div>
+            <div class="row">
+              <span class="dot" style="background:var(--muted)"></span>
+              <div class="grow">
+                <div class="name">Друзья, вечером</div>
+                <div class="sub">нет данных о режиме</div>
+                <div class="sub">192.168.1.50:7778</div>
+              </div>
+              <div class="right"><div>—</div><div>не опрошен</div></div>
+            </div>
+          </div>
+          <div class="fab">+</div>
+          <div class="statusbar">3 из 5 онлайн · показано 5</div>
+        </div>
+      </div>
+      <div class="caption">Главный экран: список, поиск, фильтры, живой опрос</div>
+    </div>
+
+    <!-- 2. Карточка сервера -->
+    <div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar">Сервер · игроки, правила, карта</div>
+          <div class="toolbar">
+            <svg class="icon" viewBox="0 0 24 24"><path fill="#e9edf5" d="M20,11H7.83l5.59-5.59L12,4l-8,8 8,8 1.41-1.41L7.83,13H20v-2z"/></svg>
+            <div class="title">Сервер</div>
+            <svg class="icon" viewBox="0 0 24 24"><path fill="#e9edf5" d="M17.65,6.35C16.2,4.9 14.21,4 12,4c-4.42,0-7.99,3.58-8,8s3.58,8 8,8c3.73,0 6.84-2.55 7.73-6h-2.08c-.82,2.33-3.04,4-5.65,4-3.31,0-6-2.69-6-6s2.69-6 6-6c1.66,0 3.14.69 4.22,1.78L13,11h7V4l-2.35,2.35z"/></svg>
+          </div>
+          <div class="card">
+            <div class="name" style="font-size:18px">Aurora RP | Mobile</div>
+            <div class="sub">91.211.4.18:7777</div>
+            <div style="margin-top:9px;font-size:13.5px">Онлайн: 123/300<br>Режим: RolePlay<br>Язык: Russian<br>Задержка: 42 мс</div>
+            <div class="btn primary">Играть</div>
+            <div class="btn secondary">Скопировать адрес</div>
+          </div>
+          <div class="card">
+            <div class="section" style="margin:0 0 6px">Игроки · 6</div>
+            <div class="row" style="border:none;padding:5px 0"><div class="grow"><div class="name" style="font-weight:500">[0] ModarAdmin</div></div><div class="right">счёт 100 · 20 мс</div></div>
+            <div class="row" style="border:none;padding:5px 0"><div class="grow"><div class="name" style="font-weight:500">[1] Игрок2</div></div><div class="right">счёт 93 · 35 мс</div></div>
+            <div class="row" style="border:none;padding:5px 0"><div class="grow"><div class="name" style="font-weight:500">[2] Игрок3</div></div><div class="right">счёт 86 · 50 мс</div></div>
+          </div>
+          <div class="card">
+            <div class="section" style="margin:0 0 6px">Правила · 7</div>
+            <div class="sub">карта: San Andreas</div>
+            <div class="sub">версия: 0.3.7-R2</div>
+            <div class="sub">компенсация лага: On</div>
+            <div class="sub">погода: 10 · время: 12:00</div>
+          </div>
+        </div>
+      </div>
+      <div class="caption">Карточка: опрос игроков и правил по кодам ’d’ и ’r’</div>
+    </div>
+
+    <!-- 3. Мод-паки -->
+    <div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar">Мод-паки с сервера лаунчера</div>
+          <div class="toolbar">
+            <svg class="icon" viewBox="0 0 24 24"><path fill="#e9edf5" d="M20,11H7.83l5.59-5.59L12,4l-8,8 8,8 1.41-1.41L7.83,13H20v-2z"/></svg>
+            <div class="title">Мод-паки</div>
+            <svg class="icon" viewBox="0 0 24 24"><path fill="#e9edf5" d="M5,20h14v-2H5v2zM19,9h-4V3H9v6H5l7,7 7-7z"/></svg>
+            <svg class="icon" viewBox="0 0 24 24"><path fill="#e9edf5" d="M17.65,6.35C16.2,4.9 14.21,4 12,4c-4.42,0-7.99,3.58-8,8s3.58,8 8,8c3.73,0 6.84-2.55 7.73-6h-2.08c-.82,2.33-3.04,4-5.65,4-3.31,0-6-2.69-6-6s2.69-6 6-6c1.66,0 3.14.69 4.22,1.78L13,11h7V4l-2.35,2.35z"/></svg>
+          </div>
+          <div class="card">
+            <div class="sub">Игра: /storage/emulated/0/GTA</div>
+            <div class="sub">Моды и копии: /storage/emulated/0/ModarLauncher</div>
+            <div class="sub">Свободно: 12,4 ГБ</div>
+            <div class="sub" style="color:var(--ok)">Доступ к файлам: есть</div>
+          </div>
+          <div class="list" style="padding-top:0">
+            <div class="row" style="align-items:flex-start">
+              <div class="grow">
+                <div class="name">Текстурный пак 2.1</div>
+                <div class="sub">48,2 МБ · Modar · архив → texdb/samp</div>
+                <div class="sub" style="white-space:normal;color:var(--text)">Новые текстуры дорог и зданий</div>
+              </div>
+              <div class="right"><span class="badge ok">установлен</span></div>
+            </div>
+            <div class="row" style="align-items:flex-start">
+              <div class="grow">
+                <div class="name">Сборка меню и HUD 1.4</div>
+                <div class="sub">12,1 МБ · Modar · архив → root</div>
+                <div class="sub" style="white-space:normal;color:var(--text)">Русские подписи в меню семьи</div>
+              </div>
+              <div class="right"><span class="badge warn">установлен 1.2</span></div>
+            </div>
+            <div class="row" style="align-items:flex-start">
+              <div class="grow">
+                <div class="name">Звуки радио</div>
+                <div class="sub">210,7 МБ · архив → audio</div>
+              </div>
+              <div class="right"><span class="badge">не установлен</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="caption">Моды: SHA-256, резервная копия, откат, установка из файла</div>
+    </div>
+
+    <!-- 4. Настройки -->
+    <div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar">Сервер лаунчера, клиент, ник, каталоги</div>
+          <div class="toolbar">
+            <svg class="icon" viewBox="0 0 24 24"><path fill="#e9edf5" d="M20,11H7.83l5.59-5.59L12,4l-8,8 8,8 1.41-1.41L7.83,13H20v-2z"/></svg>
+            <div class="title">Настройки</div>
+          </div>
+          <div class="list" style="padding:0 12px 20px">
+            <div class="section" style="margin-left:2px">Сервер лаунчера</div>
+            <div class="field">http://192.168.1.10:8090</div>
+            <div class="btn secondary">Проверить связь</div>
+            <div class="sub" style="color:var(--ok)">Связь есть. Сервер версии 1.0, серверов: 5, модов: 3</div>
+
+            <div class="section" style="margin-left:2px">Клиент SA-MP</div>
+            <div class="btn primary">Выбрать установленный клиент</div>
+            <div class="sub">Выбрано: SA-MP Mobile (com.gta.game)</div>
+
+            <div class="label">Ник в игре</div>
+            <div class="field">Modar777</div>
+
+            <div class="label">Ключи extras (адрес, порт)</div>
+            <div class="field">ip · port · nickname · password</div>
+
+            <div class="section" style="margin-left:2px">Игра и моды</div>
+            <div class="label">Каталог игры</div>
+            <div class="field">/storage/emulated/0/GTA</div>
+            <div class="sub">✔ Копировать адрес в буфер при запуске</div>
+            <div class="sub">✔ Сохранять резервные копии файлов</div>
+          </div>
+        </div>
+      </div>
+      <div class="caption">Настройки: клиент, ник, ключи extras, каталоги, доступ к файлам</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Как это работает.</b> Онлайн и правила лаунчер получает сам — по настоящему протоколу SA-MP Query (UDP, коды
+    <code>i</code>, <code>r</code>, <code>c</code>, <code>d</code>, <code>p</code>), без посредников.
+    Адрес сервера передаётся установленному клиенту через <code>Intent</code> (extras <code>ip</code>, <code>port</code>,
+    <code>nickname</code>, <code>password</code> и строка аргументов), а если сборка их не читает — адрес остаётся
+    в буфере обмена для вставки в меню игры.<br><br>
+    <b>Список серверов, мод-паки и новости</b> раздаёт ваш сервер лаунчера
+    (<code>samp-launcher/server</code>, Node.js без зависимостей). Его веб-панель — по адресу этого сервера,
+    пара «программа + панель» показана в разделе <code>samp-launcher/README.md</code>.
+  </div>
+</div>
+</body>
+</html>

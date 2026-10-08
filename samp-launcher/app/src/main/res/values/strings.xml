@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Modar SAMP</string>
+    <string name="servers_title">Серверы</string>
+    <string name="mods_title">Мод-паки</string>
+    <string name="news_title">Новости</string>
+    <string name="settings_title">Настройки</string>
+    <string name="server_title">Сервер</string>
+    <string name="play">Играть</string>
+    <string name="add_server">Новый сервер</string>
+    <string name="search_hint">Поиск: название, адрес, режим</string>
+    <string name="check_api">Проверить связь</string>
+    <string name="pick_client">Выбрать установленный клиент</string>
+    <string name="allow_storage">Разрешить доступ к файлам</string>
+    <string name="save">Сохранить</string>
+    <string name="help">Как подключиться</string>
+    <string name="about">О приложении</string>
+</resources>

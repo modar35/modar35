@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="22dp"
+    android:paddingTop="10dp"
+    android:paddingRight="22dp">
+
+    <TextView
+        style="@style/FieldLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Адрес сервера (ip:порт)" />
+
+    <EditText
+        android:id="@+id/dlg_address"
+        style="@style/Field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="12.34.56.78:7777"
+        android:inputType="textUri"
+        android:maxLines="1" />
+
+    <TextView
+        style="@style/FieldLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Название (необязательно)" />
+
+    <EditText
+        android:id="@+id/dlg_name"
+        style="@style/Field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Мой сервер"
+        android:inputType="text"
+        android:maxLines="1" />
+
+    <TextView
+        style="@style/FieldLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Пароль сервера (если есть)" />
+
+    <EditText
+        android:id="@+id/dlg_password"
+        style="@style/Field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="пусто — если сервер открыт"
+        android:inputType="text"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/dlg_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="6dp"
+        android:textColor="@color/text_muted"
+        android:textSize="12sp" />
+</LinearLayout>

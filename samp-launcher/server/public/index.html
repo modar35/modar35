@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modar SAMP — панель сервера лаунчера</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23141C2B'/><path d='M7 24V8h4l5 8 5-8h4v16h-4V15l-5 8-5-8v9z' fill='%23E9EDF5'/><path d='M25 12l5 4-5 4z' fill='%234C8DFF'/></svg>">
+</head>
+<body>
+
+<div id="login" class="login">
+  <div class="card login-card">
+    <div class="logo">Modar SAMP</div>
+    <p class="muted">Панель сервера лаунчера SA-MP: серверы, мод-паки, новости, сборки клиента и обновления приложения.</p>
+    <label>Пароль администратора</label>
+    <input id="password" type="password" placeholder="modar" autocomplete="current-password">
+    <button id="login-button" class="primary">Войти</button>
+    <p id="login-error" class="error"></p>
+    <p class="muted small">Пароль лежит в <code>data/config.json</code> и меняется в разделе «Настройки». Первый запуск: <code>DEMO=1 node server.js</code> и пароль <code>modar</code>.</p>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <header>
+    <div class="brand">Modar SAMP</div>
+    <nav id="tabs"></nav>
+    <div class="spacer"></div>
+    <div id="status-line" class="muted small"></div>
+    <button id="logout" class="ghost">Выйти</button>
+  </header>
+  <main id="view"></main>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
