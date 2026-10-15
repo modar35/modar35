@@ -1,0 +1,160 @@
+:root {
+  --bg: #0e1116;
+  --surface: #151a21;
+  --surface-alt: #1e2530;
+  --accent: #4c8dff;
+  --accent-soft: #334c8dff;
+  --accent-deep: #1b3358;
+  --text: #e9edf5;
+  --muted: #93a1b5;
+  --divider: #232b38;
+  --danger: #ff7a7a;
+  --warn: #ffc46b;
+  --ok: #4ed88a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.hidden { display: none !important; }
+.spacer { flex: 1; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.error { color: var(--danger); min-height: 20px; }
+code { background: var(--surface-alt); padding: 1px 5px; border-radius: 5px; font-size: 13px; }
+
+/* вход */
+.login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.login-card { width: 100%; max-width: 420px; }
+.logo {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  background: linear-gradient(90deg, #e9edf5, #4c8dff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* каркас */
+header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 18px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--divider);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  flex-wrap: wrap;
+}
+.brand { font-weight: 600; letter-spacing: 0.02em; }
+nav { display: flex; gap: 6px; flex-wrap: wrap; }
+nav button {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--muted);
+  padding: 7px 13px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 14px;
+}
+nav button:hover { color: var(--text); }
+nav button.active {
+  background: var(--accent-deep);
+  border-color: var(--accent);
+  color: var(--text);
+}
+main { padding: 18px; max-width: 1180px; margin: 0 auto; }
+
+/* карточки и таблицы */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--divider);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.card h2 { margin: 0 0 4px; font-size: 17px; font-weight: 600; }
+.card h3 { margin: 18px 0 8px; font-size: 14px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--divider); font-size: 14px; vertical-align: middle; }
+th { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+tr:last-child td { border-bottom: none; }
+td.actions { white-space: nowrap; text-align: right; }
+
+/* формы */
+label { display: block; color: var(--muted); font-size: 13px; margin: 10px 0 4px; }
+input, textarea, select {
+  width: 100%;
+  background: var(--surface-alt);
+  border: 1px solid var(--divider);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px;
+  font: inherit;
+}
+input:focus, textarea:focus, select:focus { outline: 1px solid var(--accent); }
+textarea { min-height: 90px; resize: vertical; }
+.row { display: flex; gap: 12px; flex-wrap: wrap; }
+.row > * { flex: 1; min-width: 160px; }
+.checkbox { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--text); }
+.checkbox input { width: auto; }
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--divider);
+  background: var(--surface-alt);
+  color: var(--text);
+}
+button:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 500; }
+button.ghost { background: transparent; }
+button.danger { color: var(--danger); border-color: #3a2731; }
+button.small { padding: 6px 10px; font-size: 13px; }
+.buttons { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+
+/* метки */
+.tag {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--text);
+  font-size: 12px;
+}
+.tag.ok { background: rgba(78, 216, 138, 0.18); color: var(--ok); }
+.tag.off { background: rgba(255, 122, 122, 0.16); color: var(--danger); }
+.tag.warn { background: rgba(255, 196, 107, 0.18); color: var(--warn); }
+
+/* уведомления */
+.toast {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface-alt);
+  border: 1px solid var(--accent-soft);
+  padding: 12px 18px;
+  border-radius: 12px;
+  max-width: 90vw;
+  z-index: 20;
+}
+.toast.error { border-color: var(--danger); color: var(--danger); }

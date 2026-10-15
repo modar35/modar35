@@ -7,6 +7,14 @@
 Together, локальные серверы (Ollama, LM Studio, llama.cpp) — адрес, ключ и название модели
 задаются в настройках.
 
+## Проекты в репозитории
+
+| Проект | Что это | Где |
+|---|---|---|
+| **Modar AI** | ИИ-ассистент для Android (этот README) | `app/`, `apk/ModarAI-1.0.apk` |
+| **Modar SAMP** | Лаунчер SA-MP: список серверов с живым опросом по UDP, подключение к серверу, мод-паки, сервер лаунчера с веб-панелью | `samp-launcher/`, [`samp-launcher/README.md`](samp-launcher/README.md) |
+| **Modar Family** | Родительский контроль: приложение, сервер и веб-панель | `parental/` |
+
 ---
 
 ## Возможности
@@ -154,9 +162,15 @@ app/src/main/java/com/modar/ai/
     Store.java / Conversation.java / Message.java   локальная история диалогов
     Prefs.java                           настройки (SharedPreferences)
 app/src/main/res/                        тема, цвета, иконки-векторы, макеты
-tools/build-apk.sh                       сборка APK без Gradle
+tools/build-apk.sh                       сборка APK без Gradle (APP_DIR=… — любой модуль)
 tools/zipalign.py                        выравнивание несжатых записей APK
 tools/fetch-toolchain.sh                 загрузка тулчейна
+
+samp-launcher/                           лаунчер SA-MP (Modar SAMP), отдельное приложение
+    app/src/main/java/com/modar/samp/    список серверов, опрос по протоколу SA-MP, моды, настройки
+    server/                              сервер лаунчера: API, веб-панель, файлы модов (Node.js)
+    tools/                               сборка APK, тесты ядра, mock-сервер SA-MP
+    apk/ModarSAMP-1.0.apk                готовый APK лаунчера
 ```
 
 Хранение данных: `SharedPreferences` (настройки и история в JSON) + внутренний каталог
